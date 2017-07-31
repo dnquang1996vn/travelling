@@ -1,0 +1,36 @@
+.profile_avatar 
+	{
+	position: relative;
+	width: 400px;
+	height: 200px; 
+	box-shadow: 3px 3px 3px #888888;
+	}
+.avatar
+{
+	width: 200px;
+	box-shadow: 3px 3px 3px #888888;
+
+}
+.profile
+{
+	box-shadow: 3px 3px 3px #888888;
+	border: 1px groove white;
+}
+.edit_avatar
+{
+	position: absolute;
+	float: right;
+	width: 30px
+	height: 30px;
+	border: 1px groove white;
+	background: #395063;
+	color: white;
+	font-size: 150%;
+	margin-top: 170px;
+	margin-left: 3px;
+}
+.edit_button 
+{
+	position: absolute;
+	margin-left: 150px; 
+}
