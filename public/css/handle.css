@@ -11,6 +11,14 @@
 	box-shadow: 3px 3px 3px #888888;
 
 }
+.avatar_trip
+{
+	width: 150px;
+	height: auto;
+	box-shadow: 3px 3px 3px #888888;
+
+}
+.avatar_
 .profile
 {
 	box-shadow: 3px 3px 3px #888888;
@@ -33,4 +41,38 @@
 {
 	position: absolute;
 	margin-left: 150px; 
+}
+
+.cover_trip
+{
+	width: 600px;
+	height: 200px;
+	vertical-align: middle;
+    text-align:center;
+}
+.cover
+{
+	width: 1000px;
+	height: auto;
+	box-shadow: 3px 3px 3px #888888;
+	vertical-align: middle;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+}
+html, body 
+{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+#map 
+{
+    height: 65%;
+    width: 100%;
+}
+hr.style2 {
+	border-top: 3px double #8c8b8b;
 }

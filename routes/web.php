@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/profile/{user_id}', 'ProfileController@show')->name('profile');
+Route::get('trip/{trip_id}','TripController@show')->name('trip');
 Route::get('/demo', function () {
     return view('demo');
 });

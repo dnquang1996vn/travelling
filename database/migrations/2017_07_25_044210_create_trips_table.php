@@ -17,6 +17,7 @@ class CreateTripsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('owner_id');
+            $table->text('description');
             $table->date('starting_time');
             $table->date('ending_time');
             $table->string('cover');

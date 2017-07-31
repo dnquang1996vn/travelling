@@ -17,7 +17,6 @@ class ProfileController extends Controller
         else
         {
             $planning_creates = $user->created_trips;
-            dd($planning_creates);
             return view('profile',[
                 'user' => $user,
                 'planning_creates' => $planning_creates,

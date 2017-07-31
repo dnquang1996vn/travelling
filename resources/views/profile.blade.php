@@ -155,7 +155,11 @@
     </div>
 </div>
 @endsection
-@section('script')
 
+@section('jq_lib') <!-- thu vien cua jequerry -->
+<script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+@endsection
+
+@section('sc')
 <script src="{{ asset('js/handleApp/profile.js') }}"></script>
 @endsection

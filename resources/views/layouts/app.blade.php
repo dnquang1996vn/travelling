@@ -119,27 +119,30 @@
             </div>
         </nav>
             @yield('content')
-        <div class="footer" style="background: #dddddd">
-            <h3> Information of co-founder </h3>
-            <div class="row">
+        <div class="row">
+            <div class="footer" style="background: #dddddd">
+                <h3> Information of co-founder </h3>
+                <div class="row">
 
-                    <ul class="social">
-                        <li> <a href="#"> <i class=" fa fa-facebook">   </i> </a> </li>
-                        <li> <a href="#"> <i class="fa fa-twitter">   </i> </a> </li>
-                        <li> <a href="#"> <i class="fa fa-google-plus">   </i> </a> </li>
-                        <li> <a href="#"> <i class="fa fa-pinterest">   </i> </a> </li>
-                        <li> <a href="#"> <i class="fa fa-youtube">   </i> </a> </li>
-                    </ul>
+                        <ul class="social">
+                            <li> <a href="#"> <i class=" fa fa-facebook">   </i> </a> </li>
+                            <li> <a href="#"> <i class="fa fa-twitter">   </i> </a> </li>
+                            <li> <a href="#"> <i class="fa fa-google-plus">   </i> </a> </li>
+                            <li> <a href="#"> <i class="fa fa-pinterest">   </i> </a> </li>
+                            <li> <a href="#"> <i class="fa fa-youtube">   </i> </a> </li>
+                        </ul>
+                </div>
             </div>
         </div>
+    </div>
     <!-- Scripts -->
 <!-- <script src="{{ asset('js/app.js') }}"></script> -->
-<script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+@yield('jq_lib')
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 <script src="{{ asset('js/tabs.min.js') }}"></script>
-@yield('script')
+@yield('sc')
 
 </body>
 </html>
