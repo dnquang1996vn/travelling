@@ -61,7 +61,7 @@
                 </div>
             </div>
         @if ((Auth::user()->id) == $user->id)
-            <button class="btn btn-primary" data-toggle="modal" data-target="#updateModal" > 
+            <button class="btn btn-primary" id = "updateBtn" > 
             update
         </button>
         @endif
@@ -77,19 +77,13 @@
                         <h4 class="modal-title">Update imformation</h4>
                     </div>
                     <div class="modal-body">
-                        <form>
-                        <br>
+                        <form><br>
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name</label>
 
                             <div class="col-md-8">
                                 <input id="name" type="text" class="form-control name" name="name" value="{{ $user->name }}" required autofocus>
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+                                <span style="color: red" id = "nameError"></span>
                             </div>
                         </div>
                         <br><br>
@@ -98,12 +92,7 @@
 
                             <div class="col-md-8">
                                 <input id="birthday" type="text" class="form-control birthday" name="birthday" value="{{ $user->birthday }}" required autofocus>
-
-                                @if ($errors->has('birthday'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('birthday') }}</strong>
-                                    </span>
-                                @endif
+                                <span style="color: red" id = "birthdayError"></span>
                             </div>
                         </div>
                         <br><br>
@@ -124,12 +113,7 @@
 
                             <div class="col-md-8">
                                 <input id="phone" type="number" class="form-control phone" name="phone" value="{{ $user->phone }}" required autofocus>
-
-                                @if ($errors->has('phone'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('phone') }}</strong>
-                                    </span>
-                                @endif
+                                <span style="color: red" id = "phoneError"></span>
                             </div>
                         </div>
                         <br><br>
@@ -138,12 +122,7 @@
 
                             <div class="col-md-8">
                                 <input id="work" type="text" class="form-control work" name="work" value="{{ $user->work }}" required autofocus>
-
-                                @if ($errors->has('work'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('work') }}</strong>
-                                    </span>
-                                @endif
+                                <span style="color: red" id = "workError"></span>
                             </div>
                         </div>
                         <br><br>
@@ -152,12 +131,7 @@
 
                             <div class="col-md-8">
                                 <input id="about" type="textarea" class="form-control about" name="about" value="{{ $user->about }}" required>
-
-                                @if ($errors->has('about'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('about') }}</strong>
-                                    </span>
-                                @endif
+                            <span style="color: red" id = "aboutError"></span>
                             </div>
                         </div>
                         
@@ -166,8 +140,7 @@
                     </div>
                     <div class="modal-footer">
                         <br><br>
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Reset</button>
-                        <button type="button" id = "save_update" class="btn btn-success" data-dismiss="modal" value="{{$user->id}}">Save</button>
+                        <button type="button" id = "save_update" class="btn btn-success" value="{{$user->id}}">Save</button>
                     </div>
                 </div>
             </div>

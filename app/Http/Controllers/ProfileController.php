@@ -13,12 +13,10 @@ class ProfileController extends Controller
     public function show ($id)
     {   
         $user = User::find($id);
-        if ($user == null)
-        {
+        if ($user == null) {
             return view('notfound');
         }
-        else
-        {   
+        else {   
             $planning_creates = $user->created_trips;
             return view('profile',[
                 'user' => $user,
@@ -27,16 +25,18 @@ class ProfileController extends Controller
         }
     }
 
-    public function update(UpdateProfile $request)
+    public function update(UpdateProfile $request,$id)
     {   
-        $user = User::find(Auth::user()->id);
-        $user->name = $request->name;
-        $user->phone = $request->phone;
-        $user->work = $request->work;
-        $user->gender = $request->gender;
-        $user->birthday = $request->birthday;
-        $user->about = $request->about;
-        $user->save();
-        return $user;
+        if (Auth::user()->id == $id){
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->phone = $request->phone;
+            $user->work = $request->work;
+            $user->gender = $request->gender;
+            $user->birthday = $request->birthday;
+            $user->about = $request->about;
+            $user->save();
+            return $user;
+        };  
     }
 }
