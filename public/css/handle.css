@@ -1,3 +1,10 @@
+.profile_avatar_trip 
+	{
+	position: relative;
+	width: 100px;
+	height: auto; 
+	box-shadow: 3px 3px 3px #888888;
+	}
 .profile_avatar 
 	{
 	position: relative;

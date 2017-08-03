@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" id = "csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -22,10 +22,12 @@
    <!--  slick -->
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
     <link href="{{ asset('css/slick.theme.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/fonts/slick.woff')}}">
     <!-- Add the slick-theme.css if you want default styling -->
     
    <!--  css tu viet -->
    <link href="{{ asset('css/handle.css') }}" rel="stylesheet">
+   <link href="{{ asset('css/loadmore.css') }}" rel="stylesheet">
 
 </head>
 <body>
@@ -45,7 +47,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        Du lich bui
+                        <strong style="font-size: 40px; color: blue">PhicherPro</strong>
                     </a>
                 </div>
 
@@ -93,7 +95,8 @@
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    <span class="name">{{ Auth::user()->name }} </span> 
+                                    <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">

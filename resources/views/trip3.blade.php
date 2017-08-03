@@ -71,21 +71,26 @@
                 <hr class="style2">
                 <div>
                     <h4><strong> joined Users:</strong></h4>
-                    <div class="row scroll_list" id = "scroll_list">
+                    <div class="row" style="overflow-y: auto; overflow-x: hidden; max-height: 700px ">
+                    
+                    <ul class = "list" id = "list">
                     @foreach ($joined_trips as $joined_trip)
-                        <div class="col-lg-6 list_user">
+                    <li>
+                        <div class="col-lg-4">   
                             <div class="thumbnail avatar_trip">
                                 <img src="{{asset($joined_trip->user->avatar)}}" class="profile_avatar">
                                 <div class="caption">
                                     <a href="{{route('profile',$joined_trip->user->id)}}">        
-                                        <h4 class="text-center"> 
-                                            <strong> {{$joined_trip->user->name}} </strong> 
+                                        <h4 class="text-center" style="font-style: 4px"> 
+                                        <strong> {{$joined_trip->user->name}}</strong>
                                         </h4>
                                     </a>
                                 </div>
                             </div>
                         </div>
+                    </li>
                     @endforeach
+                    </ul>
                     <button class="btn btn-primary" id = "loadMore"> load more</button>
                     </div>
                 </div> <!-- end joined user -->
@@ -101,7 +106,28 @@
 @endsection 
 
 @section('sc')
-<script type="text/javascript" src = "{{asset('js/handleApp/trip.js')}}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $("#list").loadMore({
+            selector: 'li',
+            loadBtn: '#loadMore',
+            limit: 6,
+            load: 6,
+            animate: true,
+            animateIn: 'fadeInUp'
+        });
+});
+
+$(window).scroll(function () {
+    if ($(this).scrollTop() > 50) {
+        $('.totop a').fadeIn();
+    } else {
+        $('.totop a').fadeOut();
+    }
+});
+console.log('sdoijjo  ')
+</script>
+
 @endsection
 <script>
       var map;

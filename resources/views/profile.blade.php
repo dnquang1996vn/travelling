@@ -2,66 +2,184 @@
 
 @section('content')
 <div class="container" style = "background: #f2f2f2">
-<br><br>
-    <section>
-        <div class="row">
-            <div class="col-md-3"> <!-- avatar -->
-                <div class="thumbnail avatar">
-                    <img src="{{asset($user->avatar)}}" class="profile_avatar">
-                    <a href="#">
-                    <span class="glyphicon glyphicon-edit edit_avatar">edit your avatar</span>
-                    </a>
-                    <div class="caption">
-                            <h4 class="text-center"> <strong> {{$user->name}} </strong> </h4>
-                            <h4 style="margin-left: 20px"> 15 joined trips </h4>
-                            <h4 style="margin-left: 20px"> 20 created trips </h4>
-                            <h4 style="margin-left: 20px"> 10 follow trips </h4>
-                    </div>
-                </div>  
-            </div> <!-- end avatar -->
+    <br><br>
+    <div class="row">
+        <div class="col-md-3"> <!-- avatar -->
+            <div class="thumbnail avatar">
+                <img src="{{asset($user->avatar)}}" class="profile_avatar">
+                @if ((Auth::user()->id) == $user->id)
+                <a href="#">
+                <span class="glyphicon glyphicon-edit edit_avatar">edit your avatar</span>
+                </a>
+                @endif
+                <div class="caption">
+                        <h4 class="text-center"> <strong class="name"> {{$user->name}} </strong> </h4>
+                        <h4 style="margin-left: 20px"> 15 joined trips </h4>
+                        <h4 style="margin-left: 20px"> 20 created trips </h4>
+                        <h4 style="margin-left: 20px"> 10 follow trips </h4>
+                </div>
+            </div>  
+        </div> <!-- end avatar -->
 
-            <div class="col-md-8"><!--  detail profile -->
-                <div class="profile">
-                    <div class="form-group">
-                        <label class = "col-lg-2 col-lg-offset-1 control-label">Name:</label>
-                        <label class = "control-label">{{$user->name}}</label>  
+        <div class="col-md-8"><!--  detail profile -->
+            <div class="profile" style="border: solid">
+                <div class="form-group">
+                    <label class = "col-lg-2 col-lg-offset-1 control-label">Name:</label>
+                    <label class = "control-label name" >{{$user->name}}</label>  
+                </div>
+                <div class="form-group">
+                    <label class = "col-lg-2 col-lg-offset-1 control-label">Birthday:</label>
+                    <label class = "control-label birthday">{{$user->birthday}}</label>  
+                </div>
+                <div class="form-group">
+                    <label class = "col-lg-2 col-lg-offset-1 control-label">Gender:</label>
+                    <label class = "control-label gender">
+                        @if ($user->gender == 0)
+                        male
+                        @else
+                        female
+                        @endif
+                    </label>  
+                </div>
+                <div class="form-group">
+                    <label class = "col-lg-2 col-lg-offset-1 control-label">
+                        Phone
+                    </label>
+                    <label class = "control-label phone">{{$user->phone}}</label>  
+                </div>
+                <div class="form-group">
+                    <label class = "col-lg-2 col-lg-offset-1 control-label">
+                        Work
+                    </label>
+                    <label class = "control-label work">{{$user->work}}</label>  
+                </div>
+                <div class="form-group">
+                    <label class = "col-lg-2 col-lg-offset-1 control-label">Description:</label>
+                    <label class = "control-label about">
+                    {{$user->about}}
+                    </label>  
+                </div>
+            </div>
+        @if ((Auth::user()->id) == $user->id)
+            <button class="btn btn-primary" data-toggle="modal" data-target="#updateModal" > 
+            update
+        </button>
+        @endif
+        </div>
+        <br>
+        <!-- Modal update-->
+        <div id="updateModal" class="modal fade modal-lg" role="dialog">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Update imformation</h4>
                     </div>
-                    <div class="form-group">
-                        <label class = "col-lg-2 col-lg-offset-1 control-label">Birthday:</label>
-                        <label class = "control-label">{{$user->birthday}}</label>  
+                    <div class="modal-body">
+                        <form>
+                        <br>
+                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                            <label for="name" class="col-md-4 control-label">Name</label>
+
+                            <div class="col-md-8">
+                                <input id="name" type="text" class="form-control name" name="name" value="{{ $user->name }}" required autofocus>
+
+                                @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="form-group{{ $errors->has('birthday') ? ' has-error' : '' }}">
+                            <label for="birthday" class="col-md-4 control-label">Birthday</label>
+
+                            <div class="col-md-8">
+                                <input id="birthday" type="text" class="form-control birthday" name="birthday" value="{{ $user->birthday }}" required autofocus>
+
+                                @if ($errors->has('birthday'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('birthday') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Gender</label>
+
+                            <div class="col-md-8">
+                                <select id = "gender" name = "gender" class="form-control">
+                                    <option value="0">Male</option>
+                                    <option value="1">Female</option>
+                                </select>
+                               
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
+                            <label for="phone" class="col-md-4 control-label">Phone</label>
+
+                            <div class="col-md-8">
+                                <input id="phone" type="number" class="form-control phone" name="phone" value="{{ $user->phone }}" required autofocus>
+
+                                @if ($errors->has('phone'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('phone') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="form-group{{ $errors->has('work') ? ' has-error' : '' }}">
+                            <label for="work" class="col-md-4 control-label">Work</label>
+
+                            <div class="col-md-8">
+                                <input id="work" type="text" class="form-control work" name="work" value="{{ $user->work }}" required autofocus>
+
+                                @if ($errors->has('work'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('work') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="form-group{{ $errors->has('about') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Descripion about yourself</label>
+
+                            <div class="col-md-8">
+                                <input id="about" type="textarea" class="form-control about" name="about" value="{{ $user->about }}" required>
+
+                                @if ($errors->has('about'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('about') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        </form>
+                        
                     </div>
-                    <div class="form-group">
-                        <label class = "col-lg-2 col-lg-offset-1 control-label">Gender:</label>
-                        <label class = "control-label">
-                            @if ($user->gender == 0)
-                            male
-                            @else
-                            female
-                            @endif
-                        </label>  
-                    </div>
-                    <div class="form-group">
-                        <label class = "col-lg-2 col-lg-offset-1 control-label">
-                            {{$user->work}}
-                        </label>
-                        <label class = "control-label">Stdent</label>  
-                    </div>
-                    <div class="form-group">
-                        <label class = "col-lg-2 col-lg-offset-1 control-label">Description:</label>
-                        <label class = "control-label">
-                        {{$user->about}}
-                        </label>  
+                    <div class="modal-footer">
+                        <br><br>
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Reset</button>
+                        <button type="button" id = "save_update" class="btn btn-success" data-dismiss="modal" value="{{$user->id}}">Save</button>
                     </div>
                 </div>
-            <button class="btn btn-primary"> update</button>
             </div>
-
         </div>
-    </section>
+        <!-- end modal -->
+    </div>
+     <!-- end details user -->
 
    <!--  list trip -->
     <!-- list created -->
     <div>
+        <hr style="border-top: 3px double #8c8b8b;">
         <h3> <strong> Created trips </strong> </h3>
           <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">

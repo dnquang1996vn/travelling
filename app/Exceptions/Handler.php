@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
      * @return void
      */
     public function report(Exception $exception)
-    {
+    {   
         parent::report($exception);
     }
 
@@ -43,7 +43,15 @@ class Handler extends ExceptionHandler
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
-    {
+    {   
+        if ($request->expectsJson()) {
+            if ($exception instanceof ValidationException) {
+                return response()->json([
+                    'message' => $exception->getMessage(),
+                    'errors'  => $exception->validator->errors()
+                ], 422);
+            }
+        }
         return parent::render($request, $exception);
     }
 
