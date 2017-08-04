@@ -20,7 +20,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/profile/{user_id}', 'ProfileController@show')->name('profile');
 Route::post('profile/{user_id}/update','ProfileController@update')->name('updateProfile');
+Route::post('profile/{user_id}/upload','ProfileController@upload')->name('uploadAvatar');
 Route::get('trip/{trip_id}','TripController@show')->name('trip');
 Route::get('/demo', function () {
     return view('demo');
 });
+Route::post("/fuck",'ProfileController@upload');
+Route::get('load','ProfileController@load')->name('load');

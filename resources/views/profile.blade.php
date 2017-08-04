@@ -5,13 +5,17 @@
     <br><br>
     <div class="row">
         <div class="col-md-3"> <!-- avatar -->
-            <div class="thumbnail avatar">
-                <img src="{{asset($user->avatar)}}" class="profile_avatar">
+            <div class="thumbnail avatar" id = "avatarFrame"> 
+                
+                <img src="{{asset($user->avatar)}}" class="profile_avatar" id = "avatar">
                 @if ((Auth::user()->id) == $user->id)
                 <a href="#">
-                <span class="glyphicon glyphicon-edit edit_avatar">edit your avatar</span>
+                    <span class="glyphicon glyphicon-edit edit_avatar" id = "editAvatarBtn">
+                        edit your avatar
+                    </span>
                 </a>
                 @endif
+            
                 <div class="caption">
                         <h4 class="text-center"> <strong class="name"> {{$user->name}} </strong> </h4>
                         <h4 style="margin-left: 20px"> 15 joined trips </h4>
@@ -20,6 +24,31 @@
                 </div>
             </div>  
         </div> <!-- end avatar -->
+        <!-- modal edit avatar -->
+        <div id="editAvatarModal" class="modal fade" role="dialog">
+            
+            <div class="modal-dialog">
+            <!-- modal content -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Update Avatar</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: red" id = "avatarError"></span>
+                        <form enctype="multipart/form-data" id = "editAvatarForm" method="post" action="{{route('uploadAvatar',$user->id)}}">
+                            <input type="file" name="avatarInput" id="avatarInput">
+                            <img src="{{asset($user->avatar)}}" id="avatarDisplay" width="200px" />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id = "saveAvatar">
+                            Save 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="col-md-8"><!--  detail profile -->
             <div class="profile" style="border: solid">
@@ -249,6 +278,7 @@
 
 @section('jq_lib') <!-- thu vien cua jequerry -->
 <script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
 @endsection
 
 @section('sc')

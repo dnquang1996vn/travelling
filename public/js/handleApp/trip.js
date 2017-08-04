@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    
+    // load more
     $(".list_user").hide();
     $(".list_user").slice(0,4).show();
     $("#loadMore").on('click', function (e) {
@@ -14,7 +16,6 @@ $(document).ready(function(){
             scrollTop: $(this).offset().top
         }, 1500);
     });
-});
 
     $(window).scroll(function () {
         if ($(this).scrollTop() > 50) {
@@ -22,4 +23,7 @@ $(document).ready(function(){
         } else {
             $('.totop a').fadeOut();
         }
+    });
 });
+
+    

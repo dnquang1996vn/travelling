@@ -7,6 +7,9 @@ use Illuminate\Http\Response;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateProfile;
+use App\Http\Requests\UploadAvatar;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ProfileController extends Controller
 {
@@ -38,5 +41,26 @@ class ProfileController extends Controller
             $user->save();
             return $user;
         };  
+    }
+
+    public function upload(UploadAvatar $request,$id)
+    {   
+        if (Auth::user()->id == $id){
+            
+            //$path = $request->avatarInput->store('image/avatar');
+            $path = Storage::putFile(
+                'avatars', $request->avatarInput);
+            $user = User::find($id);
+            Storage::delete($user->avatar);           
+            $user->avatar = $path;
+            $user->save();
+            return $user;
+        }
+    }
+
+    public function load()
+    {
+        $url = Storage::url('quang.jpg');
+        return view('load')->with('url',$url);
     }
 }
