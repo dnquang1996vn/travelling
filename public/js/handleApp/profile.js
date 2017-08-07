@@ -35,6 +35,7 @@
                         'accepts': 'application/json',
                     }
                 });
+                console.log(new FormData($("#editAvatarForm")[0]));
                 $.ajax({
                     url:'/profile/'+user_id+'/upload',
                     data:new FormData($("#editAvatarForm")[0]),
@@ -46,7 +47,7 @@
                     success:function(data){
                         $("#avatarError").html("");
                         $("#editAvatarModal").modal("hide");
-                        location.reload();
+                       // location.reload();
                     },
                     error:function(data){
                         var error = JSON.parse(data.responseText);

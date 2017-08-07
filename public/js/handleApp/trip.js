@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+    $('.nav-tabs').scrollingTabs();
     // load more
     $(".list_user").hide();
     $(".list_user").slice(0,4).show();
@@ -24,6 +24,59 @@ $(document).ready(function(){
             $('.totop a').fadeOut();
         }
     });
+
+    //follow trip
+    $("#followBtn").click(function() {
+       
+        var data = {
+            trip_id: $('#trip_id').val(),
+            user_id: $('#user_id').val(),
+        }
+        console.log(data);
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'accepts': 'application/json',
+        }
+        });
+        if ($("#followBtn").val() == 0){
+            $.ajax({
+                url: '/trip/follow',
+                type: "post",
+                datatType: "json",
+                
+                data: data,
+                success: function(data){
+                    $("#followBtn").prop("value",1);
+                    console.log($("#followBtn").val());
+                    $("#followBtn").html("Unfollow");
+                },
+                error: function(data) {
+
+                }
+            });
+        }
+        else {
+            $.ajax({
+                url: '/trip/unfollow',
+                type: "post",
+                datatType: "json",
+                
+                data: data,
+                success: function(data){
+                    $("#followBtn").prop("value",0);
+                    console.log($("#followBtn").val());
+                    $("#followBtn").html("Follow");
+                },
+                error: function(data) {
+
+                }
+            });
+        }
+        
+    });
+
+
 });
 
     

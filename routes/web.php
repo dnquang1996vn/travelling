@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','HomeController@index');
 
 Auth::routes();
 
@@ -22,6 +20,12 @@ Route::get('/profile/{user_id}', 'ProfileController@show')->name('profile');
 Route::post('profile/{user_id}/update','ProfileController@update')->name('updateProfile');
 Route::post('profile/{user_id}/upload','ProfileController@upload')->name('uploadAvatar');
 Route::get('trip/{trip_id}','TripController@show')->name('trip');
+Route::post('trip/follow','TripController@update');
+Route::post('trip/unfollow', 'TripController@unfollow');
+
+
+
+
 Route::get('/demo', function () {
     return view('demo');
 });
