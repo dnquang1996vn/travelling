@@ -27,3 +27,4 @@ Route::get('/demo', function () {
 });
 Route::post("/fuck",'ProfileController@upload');
 Route::get('load','ProfileController@load')->name('load');
+Route::get('create_trip','CreateTripController@create');
