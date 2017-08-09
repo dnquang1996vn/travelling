@@ -183,6 +183,9 @@
     <div>
         <hr style="border-top: 3px double #8c8b8b;">
         <h3> <strong> Created trips </strong> </h3>
+        @if ($created_trips->count() == 0)
+            <h5> <strong> No created trips </strong> </h5>
+        @else
         <section class="regular slider">
             @foreach($created_trips as $new)
                 <div class="thumbnail">
@@ -211,18 +214,22 @@
                 </div> <!-- end col-lo=g-4 -->
             @endforeach
         </section>
+        @endif
     </div>
 
     <div>
         <hr style="border-top: 3px double #8c8b8b;">
         <h3> <strong> Followed trips </strong> </h3>
+        @if ($followed_trips->count() == 0)
+            <h5><strong>No followed trips</strong></h5>
+        @else
         <section class="regular slider">
             @foreach($followed_trips as $new)
                 <div class="thumbnail">
                     <img src="{{asset($new->trip->cover)}}" alt="">
                     <div class="caption">
-                        <h4><a href="{{route('trip',$new->trip->id)}}"><center>{{$new->name}}</center></a>
-                        <h5 class="text-center">{{$new->trip->starting_time}} to {{$new->ending_time}}</h5>
+                        <h4><a href="{{route('trip',$new->trip->id)}}"><center>{{$new->trip->name}}</center></a>
+                        <h5 class="text-center">{{$new->trip->starting_time}} to {{$new->trip->ending_time}}</h5>
                         </h4>
                         <div class="row">
                             <div class="col-md-6 col-lg-6">
@@ -244,18 +251,22 @@
                 </div> <!-- end col-lo=g-4 -->
             @endforeach
         </section>
+        @endif
     </div>
 
     <div>
         <hr style="border-top: 3px double #8c8b8b;">
         <h3> <strong> Joined trips </strong> </h3>
+        @if ($joined_trips->count() == 0)
+            <h5><strong>No joined trip</strong></h5>
+        @else
         <section class="regular slider">
             @foreach($joined_trips as $new)
                 <div class="thumbnail">
                     <img src="{{asset($new->trip->cover)}}" alt="">
                     <div class="caption">
-                        <h4><a href="{{route('trip',$new->trip->id)}}"><center>{{$new->name}}</center></a>
-                        <h5 class="text-center">{{$new->trip->starting_time}} to {{$new->ending_time}}</h5>
+                        <h4><a href="{{route('trip',$new->trip->id)}}"><center>{{$new->trip->name}}</center></a>
+                        <h5 class="text-center">{{$new->trip->starting_time}} to {{$new->trip->ending_time}}</h5>
                         </h4>
                         <div class="row">
                             <div class="col-md-6 col-lg-6">
@@ -277,6 +288,7 @@
                 </div> <!-- end col-lo=g-4 -->
             @endforeach
         </section>
+        @endif
     </div>
     
 </div>

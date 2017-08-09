@@ -51,7 +51,7 @@ class ProfileController extends Controller
         };  
     }
 
-    public function upload(UploadAvatar $request,$id)
+    public function upload(UpdateProfile $request,$id)
     {   
         if (Auth::user()->id == $id){
             
