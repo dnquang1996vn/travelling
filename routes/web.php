@@ -11,7 +11,9 @@
 |
 */
 
+
 Route::get('/','HomeController@index');
+
 
 Auth::routes();
 
@@ -40,3 +42,6 @@ Route::get('/demo', function () {
 });
 Route::post("/fuck",'ProfileController@upload');
 Route::get('load','ProfileController@load')->name('load');
+//Create Trip Route
+Route::get('create_trip','CreateTripController@create');
+Route::post('create_trip','CreateTripController@store');
