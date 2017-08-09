@@ -11,17 +11,32 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+
+Route::get('/','HomeController@index');
+
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/profile/{user_id}', 'ProfileController@show')->name('profile');
-Route::post('profile/{user_id}/update','ProfileController@update')->name('updateProfile');
-Route::post('profile/{user_id}/upload','ProfileController@upload')->name('uploadAvatar');
-Route::get('trip/{trip_id}','TripController@show')->name('trip');
+Route::post('profile/{user_id}/update', 'ProfileController@update')->name('updateProfile');
+Route::post('profile/{user_id}/upload', 'ProfileController@upload')->name('uploadAvatar');
+Route::get('trip/{trip_id}', 'TripController@show')->name('trip');
+Route::post('trip/follow', 'TripController@follow');
+Route::post('trip/unfollow', 'TripController@unfollow');
+Route::post('trip/joinTrip', 'TripController@joinTrip');
+Route::post('trip/cancelRequest', 'TripController@cancelRequest');
+Route::post('trip/acceptRequest', 'TripController@acceptRequest');
+Route::post('trip/denyRequest', 'TripController@denyRequest');
+Route::post('trip/outTrip', 'TripController@outTrip');
+Route::post('trip/kick', 'TripController@kick');
+Route::post('trip/startTrip', 'TripController@startTrip');
+Route::post('trip/finishTrip', 'TripController@finishTrip');
+Route::post('trip/cancelTrip', 'TripController@cancelTrip');
+
+
+
+
 Route::get('/demo', function () {
     return view('demo');
 });

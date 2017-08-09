@@ -21,7 +21,7 @@ class CreateTripsTable extends Migration
             $table->date('starting_time');
             $table->date('ending_time');
             $table->string('cover');
-            $table->enum('status',[0,1,2])->comment("0 if planning, 1 if running, 2 if done");
+            $table->string('status')->comment("0 if planning, 1 if running, 2 if done,3 if cancel");
             $table->timestamps();
         });
     }

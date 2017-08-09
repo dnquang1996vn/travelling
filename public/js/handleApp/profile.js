@@ -35,6 +35,7 @@
                         'accepts': 'application/json',
                     }
                 });
+                console.log(new FormData($("#editAvatarForm")[0]));
                 $.ajax({
                     url:'/profile/'+user_id+'/upload',
                     data:new FormData($("#editAvatarForm")[0]),
@@ -72,7 +73,6 @@
                     work: $('#work').val(),
                     about: $('#about').val(),
                 }
-                console.log(updateData);
                 $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
