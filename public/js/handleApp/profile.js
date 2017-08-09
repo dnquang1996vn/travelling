@@ -47,7 +47,7 @@
                     success:function(data){
                         $("#avatarError").html("");
                         $("#editAvatarModal").modal("hide");
-                       // location.reload();
+                        location.reload();
                     },
                     error:function(data){
                         var error = JSON.parse(data.responseText);
@@ -73,7 +73,6 @@
                     work: $('#work').val(),
                     about: $('#about').val(),
                 }
-                console.log(updateData);
                 $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),

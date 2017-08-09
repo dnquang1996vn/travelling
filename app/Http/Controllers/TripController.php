@@ -15,38 +15,45 @@ class TripController extends Controller
     public function show($id)
     {
     	$trip = Trip::find($id);
-    	
+    	$user = Auth::user();
     	if ($trip == null)
     	{
     		return view('notfound');
     	}
     	else
     	{  
+
             $joined_trips = Joined_trip::where('trip_id', $id)->get();
-            $notFollowed = $this->checkNotFollowed($id);
-            $isOwner = $this->checkOwner($id);
-            $Joined = $this->checkJoined($id);
-    		return view('trip',[
-    		'trip' => $trip,
-    		'joined_trips' => $joined_trips,
-            'isOwner' => $isOwner,
-            'notFollowed' => $notFollowed,
-            'Joined' => $Joined,
-    		]);
+            $joined_requests = $trip->joined_requests;
+            if ($user == null){
+                return view('trip',[
+                    'trip' => $trip,
+                    'joined_trips' => $joined_trips,
+                    ]);
+            } else {
+               if ($user->can('update',$trip)){
+                return view('ownerTrip',[
+                'trip' => $trip,
+                'joined_trips' => $joined_trips,
+                'joined_requests' => $joined_requests,
+                ]);
+            }
+                else {
+                    return view('normalTrip',[
+                    'trip' => $trip,
+                    'joined_trips' => $joined_trips,
+                    ]);
+                } 
+            }
+            
     	}
     }
 
-    public function update(Request $request)
-    {
-        $user = Auth::user(); 
-        if ($user->cannot('update', Post::class)) {
-            dd('xxx');
-        }
-        dd('ddd');
-    }
     public function follow(Request $request)
-    {
-        if ($this->checkNotFollowed($request->trip_id)){
+    {   
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        if ($user->can('follow',$trip)){
             $followed_trip = new Followed_trip;
             $followed_trip->user_id = $request->user_id;
             $followed_trip->trip_id = $request->trip_id;
@@ -57,52 +64,116 @@ class TripController extends Controller
 
     public function unfollow(Request $request)
     {
-        if ($this->checkNotFollowed($request->trip_id)){
-        
-        }
-        else {
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        if ($user->can('unfollow',$trip)){
             $followed_trip = Followed_trip:: where ('trip_id', $request->trip_id)
                                 ->where('user_id', $request->user_id)->delete();
         }
     }
 
-    public function checkOwner($id)
-    {
-        $trip = Trip::find($id);
-        return (Auth::id() == $trip->owner_id);
-    }
-
-    public function checkNotFollowed($id)
-    {   if ($this->checkOwner($id))
-        {
-            return false;
-        }
-        else
-        {
-            $followed_trips = Followed_trip::where('trip_id', $id)
-                            ->where('user_id',Auth::id())->get();
-            return ($followed_trips->count() == 0);
-        }
-        
-    }
-    
-    public function checkJoined($id)
-    {
-        $joined_trips = Joined_trip::where('trip_id', $id)
-                            ->where('user_id',Auth::id())->get();
-        return ($joined_trips->count() > 0);
-    }
-
-    public function checkRequested($id)
-    {
-        if ($this->checkJoined($id)) {
-            return false;
-        }
-        else {
-            $joined_requests = Joined_request::where('trip_id', $id)
-                            ->where('user_id',Auth::id())->get();
-            return ($joined_requests->count() > 0); 
+    public function joinTrip(Request $request)
+    {   
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        if ($user->can('joinRequest',$trip)){
+            $joined_request = new Joined_request;
+            $joined_request->user_id = $request->user_id;
+            $joined_request->trip_id = $request->trip_id;
+            $joined_request->message = $request->message;
+            $joined_request->save();
+            return $joined_request;
         }
     }
 
+    public function cancelRequest (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        if ($user->can('cancelRequest',$trip)){
+            $joined_request = Joined_request::where ('trip_id', $request->trip_id)
+                                ->where('user_id', $request->user_id)->delete();
+            return "canceled";
+        }
+    }
+
+    public function acceptRequest (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $owner = Auth::user();
+        if ($owner->can('update',$trip)){
+            $joined_requests = Joined_request::where ('trip_id', $request->trip_id)
+                                ->where('user_id', $request->user_id)->delete();
+            $joined_trip = new Joined_trip;
+            $joined_trip->user_id = $request->user_id;
+            $joined_trip->trip_id = $request->trip_id;
+            $joined_trip->save();
+            return $joined_trip;
+        }
+    }
+
+    public function denyRequest (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $owner = Auth::user();
+        if ($owner->can('update',$trip)){
+            $joined_requests = Joined_request::where ('trip_id', $request->trip_id)
+                                ->where('user_id', $request->user_id)->delete();
+        }
+    }
+
+    public function outTrip (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        $joined_trip = Joined_trip::where ('trip_id', $request->trip_id)
+                                ->where('user_id', $request->user_id);
+        if ($user->can('outTrip',$trip)){
+            $joined_trip = Joined_trip::where ('trip_id', $request->trip_id)
+                                ->where('user_id', $request->user_id)->delete();
+        }
+    }
+
+    public function kick (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $owner = Auth::user();
+        if ($owner->can('update',$trip)){
+            $joined_trip = Joined_trip::where ('trip_id', $request->trip_id)
+                                ->where('user_id', $request->user_id)->delete();
+        }
+    }
+
+    public function startTrip (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        if ($user->can('startTrip',$trip)){
+            $trip->status = 1;
+            $trip->save();
+            return $trip;
+        }
+        //else return 1;
+    }
+
+    public function finishTrip (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        if ($user->can('finishTrip',$trip)){
+            $trip->status =2;
+            $trip->save();
+        }
+    }
+
+    public function cancelTrip (Request $request)
+    {
+        $trip = Trip::find($request->trip_id);
+        $user = Auth::user();
+        if ($user->can('cancelTrip',$trip)){
+            $trip->status = 3;
+            $trip->save();
+        }
+        return 3;
+    }
 }

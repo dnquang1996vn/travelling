@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function joined_trips()
     {
-        return $this->hasMany('App\Joined_trips');
+        return $this->hasMany('App\Joined_trip');
     }
 
     public function joined_requests()

@@ -18,9 +18,9 @@
             
                 <div class="caption">
                         <h4 class="text-center"> <strong class="name"> {{$user->name}} </strong> </h4>
-                        <h4 style="margin-left: 20px"> 15 joined trips </h4>
-                        <h4 style="margin-left: 20px"> 20 created trips </h4>
-                        <h4 style="margin-left: 20px"> 10 follow trips </h4>
+                        <h4 style="margin-left: 20px"> {{$joined_trips->count()}} joined trips </h4>
+                        <h4 style="margin-left: 20px"> {{$created_trips->count()}} created trips </h4>
+                        <h4 style="margin-left: 20px"> {{$followed_trips->count()}} follow trips </h4>
                 </div>
             </div>  
         </div> <!-- end avatar -->
@@ -183,97 +183,104 @@
     <div>
         <hr style="border-top: 3px double #8c8b8b;">
         <h3> <strong> Created trips </strong> </h3>
-          <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#planning_created" aria-controls="home" role="tab" data-toggle="tab">Planning</a>
-            </li>
-            <li role="presentation">
-                <a href="#inprogress_created" aria-controls="profile" role="tab" data-toggle="tab">In Progress</a>
-            </li>
-            <li role="presentation">
-                <a href="#completed_created" aria-controls="messages" role="tab" data-toggle="tab">Completed</a>
-            </li>
-        </ul>
-
-          <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="planning_created"></div>
-            <div role="tabpanel" class="tab-pane" id="inprogress_created"></div>
-            <div role="tabpanel" class="tab-pane" id="completed_created">sdfi</div>
-        </div>
+        <section class="regular slider">
+            @foreach($created_trips as $new)
+                <div class="thumbnail">
+                    <img src="{{asset($new->cover)}}" alt="">
+                    <div class="caption">
+                        <h4><a href="{{route('trip',$new->id)}}"><center>{{$new->name}}</center></a>
+                        <h5 class="text-center">{{$new->starting_time}} to {{$new->ending_time}}</h5>
+                        </h4>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <h5 class="text-center"> owner: </h5>
+                                <h5 class="text-center">
+                                    <a href="{{route('profile',$new->owner->id)}}">{{$new->owner->name}}</a>
+                                </h5>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <h5 class="text-center">
+                                {{$new->joined_trips->count()}} persons joined</h5>
+                                <h5 class="text-center">
+                                {{$new->followed_trips->count()}} persons followed
+                                </h5>
+                            </div>
+                        </div>  
+                        <p></p>
+                    </div>
+                </div> <!-- end col-lo=g-4 -->
+            @endforeach
+        </section>
     </div>
 
-    <!-- list joined trip -->
     <div>
-        <h3> <strong> Joined trips </strong> </h3>
-          <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#planning_joined" aria-controls="home" role="tab" data-toggle="tab">Planning</a>
-            </li>
-            <li role="presentation">
-                <a href="#inprogress_joined" aria-controls="profile" role="tab" data-toggle="tab">In Progress</a>
-            </li>
-            <li role="presentation">
-                <a href="#completed_joined" aria-controls="messages" role="tab" data-toggle="tab">Completed</a>
-            </li>
-        </ul>
-
-          <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="planning_joined">
-            </div>
-            <div role="tabpanel" class="tab-pane" id="inprogress_joined">join 2</div>
-            <div role="tabpanel" class="tab-pane" id="completed_joined">sdfi</div>
-        </div>
-    </div>
-
-    <!-- list follow trips -->
-    <div>
+        <hr style="border-top: 3px double #8c8b8b;">
         <h3> <strong> Followed trips </strong> </h3>
-          <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#planning_followed" aria-controls="home" role="tab" data-toggle="tab">Planning</a>
-            </li>
-            <li role="presentation">
-                <a href="#inprogress_followed" aria-controls="profile" role="tab" data-toggle="tab">In Progress</a>
-            </li>
-            <li role="presentation">
-                <a href="#completed_followed" aria-controls="messages" role="tab" data-toggle="tab">Completed</a>
-            </li>
-        </ul>
-
-          <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="planning_followed"></div>
-            <div role="tabpanel" class="tab-pane" id="inprogress_followed"></div>
-            <div role="tabpanel" class="tab-pane" id="completed_followed">
-                 <section class="regular slider">
-      <div>
-        <img src="http://placehold.it/350x300?text=1">
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=2">
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=3">
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=4">
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=5">
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=6">
-      </div>
-    </section>
-            </div>
-        </div>
+        <section class="regular slider">
+            @foreach($followed_trips as $new)
+                <div class="thumbnail">
+                    <img src="{{asset($new->trip->cover)}}" alt="">
+                    <div class="caption">
+                        <h4><a href="{{route('trip',$new->trip->id)}}"><center>{{$new->name}}</center></a>
+                        <h5 class="text-center">{{$new->trip->starting_time}} to {{$new->ending_time}}</h5>
+                        </h4>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <h5 class="text-center"> owner: </h5>
+                                <h5 class="text-center">
+                                    <a href="{{route('profile',$new->trip->owner->id)}}">{{$new->trip->owner->name}}</a>
+                                </h5>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <h5 class="text-center">
+                                {{$new->trip->joined_trips->count()}} persons joined</h5>
+                                <h5 class="text-center">
+                                {{$new->trip->followed_trips->count()}} persons followed
+                                </h5>
+                            </div>
+                        </div>  
+                        <p></p>
+                    </div>
+                </div> <!-- end col-lo=g-4 -->
+            @endforeach
+        </section>
     </div>
+
+    <div>
+        <hr style="border-top: 3px double #8c8b8b;">
+        <h3> <strong> Joined trips </strong> </h3>
+        <section class="regular slider">
+            @foreach($joined_trips as $new)
+                <div class="thumbnail">
+                    <img src="{{asset($new->trip->cover)}}" alt="">
+                    <div class="caption">
+                        <h4><a href="{{route('trip',$new->trip->id)}}"><center>{{$new->name}}</center></a>
+                        <h5 class="text-center">{{$new->trip->starting_time}} to {{$new->ending_time}}</h5>
+                        </h4>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <h5 class="text-center"> owner: </h5>
+                                <h5 class="text-center">
+                                    <a href="{{route('profile',$new->trip->owner->id)}}">{{$new->trip->owner->name}}</a>
+                                </h5>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <h5 class="text-center">
+                                {{$new->trip->joined_trips->count()}} persons joined</h5>
+                                <h5 class="text-center">
+                                {{$new->trip->followed_trips->count()}} persons followed
+                                </h5>
+                            </div>
+                        </div>  
+                        <p></p>
+                    </div>
+                </div> <!-- end col-lo=g-4 -->
+            @endforeach
+        </section>
+    </div>
+    
 </div>
+
 @endsection
 
 @section('jq_lib') <!-- thu vien cua jequerry -->

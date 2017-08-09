@@ -25,23 +25,14 @@
                         </h5>
                 	</div>
                 	<div class="col-md-6 col-lg-6">
-                        <h5 class="text-center">20 persons joined</h5>
                         <h5 class="text-center">
-                   			10 persons followed
+                        {{$new->joined_trips->count()}} persons joined</h5>
+                        <h5 class="text-center">
+                   		{{$new->followed_trips->count()}} persons followed
                         </h5>
                 	</div>
                 </div>	
                 <p></p>
-            </div>
-            <div class="ratings">
-                <p class="pull-right">15 reviews</p>
-                <p>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                </p>
             </div>
         </div> <!-- end col-lo=g-4 -->
     @endforeach
@@ -65,23 +56,13 @@
                         </h5>
                     </div>
                     <div class="col-md-6 col-lg-6">
-                        <h5 class="text-center">20 persons joined</h5>
+                        <h5 class="text-center">{{$hot->joined_trips->count()}} persons joined</h5>
                         <h5 class="text-center">
-                            10 persons followed
+                        {{$hot->followed_trips->count()}} persons followed
                         </h5>
                     </div>
                 </div>  
                 <p></p>
-            </div>
-            <div class="ratings">
-                <p class="pull-right">15 reviews</p>
-                <p>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                </p>
             </div>
         </div> <!-- end col-lo=g-4 -->
     @endforeach
@@ -104,23 +85,13 @@
                         </h5>
                     </div>
                     <div class="col-md-6 col-lg-6">
-                        <h5 class="text-center">20 persons joined</h5>
+                        <h5 class="text-center">{{$all->joined_trips->count()}} persons joined</h5>
                         <h5 class="text-center">
-                            10 persons followed
+                            {{$all->followed_trips->count()}} persons followed
                         </h5>
                     </div>
                 </div>  
                 <p></p>
-            </div>
-            <div class="ratings">
-                <p class="pull-right">15 reviews</p>
-                <p>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                </p>
             </div>
         </div> <!-- end col-lo=g-4 -->
     @endforeach

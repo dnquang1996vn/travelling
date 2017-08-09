@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRequestTable extends Migration
+class CreateJoinedRequestTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,6 +17,7 @@ class CreateRequestTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('trip_id');
+            $table->text('message');
             $table->timestamps();
         });
     }
@@ -30,4 +31,5 @@ class CreateRequestTable extends Migration
     {
         Schema::dropIfExists('joined_requests');
     }
+    
 }

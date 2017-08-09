@@ -9,43 +9,48 @@
             <h4 class="text-center" style="font-style: italic;">
                 {{$trip->description}}
             </h4> 
-            <div class="text-center" style="display: inline;">
-                <button class="btn btn-primary">
-                    Status: 
-                    @if ($trip->status == 0)
-                        planning
-                    @elseif ($trip->status == 1)
-                        running
-                    @else
-                        done
-                    @endif
-                </button>
-            </div>
+            @can ('update', $trip)
+
+                    <button class="btn btn-primary text-center">
+                        Edit trip
+                    </button>
+                    <div class="dropdown" style="float: left;">
+                        @if ($trip->status == 0)
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" value="0" id = "statusBtn">
+                                Status: planning
+                            </button>
+                        @elseif ($trip->status == 1)
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" value="1" id = "statusBtn">
+                                Status: running
+                            </button>
+                        @elseif ($trip->status == 2)
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" value="2" id="statusBtn">
+                                Status: done
+                            </button>
+                        @else ($trip->status == 3)
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" value="2" id="statusBtn">
+                                Status: done
+                            </button>
+                        @endif
+
+                        <span class="caret"></span>
+                        <ul class="dropdown-menu">
+                            <li id="startTripBtn">
+                                <a href="/" onclick="return false;">Start this trip</a>
+                            </li>
+                            <li id="cancelTripBtn">
+                                <a href="/" onclick="return false;">Cancel this trip</a>
+                            </li>
+                            <li id="finishTripBtn">
+                                <a href="/" onclick="return false;">Finish this trip</a>
+                            </li>
+                        </ul>
+                    </div>
+        
+            @endcan
             <input type="hidden" id = "trip_id" value="{{$trip->id}}">
             <input type="hidden" id = "user_id" value="{{Auth::id()}}">
         </p>
-        <!-- modal request join -->
-        <div id="requestModal" class="modal fade" role="dialog"> 
-            <div class="modal-dialog">
-            <!-- modal content -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Send a joining request</h4>
-                    </div>
-                    <div class="modal-body">
-                        <h3> <strong>Send a joining message to the trip's onwer</strong></h3>
-                        <span style="color: red" id = "joinRequestError"></span>
-                        <textarea cols = "60" rows ="5" id="messages"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" id = "sendRequest">
-                            Save 
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="thumbnail cover">
             <img class = "cover_trip" src = "{{asset($trip->cover)}}">
         </div>
@@ -57,6 +62,9 @@
         </li>
         <li role="presentation">
             <a href="#discussDiv" aria-controls="profile" role="tab" data-toggle="tab">Discuss</a>
+        </li>
+        <li role="presentation">
+            <a href="#requestDiv" aria-controls="messages" role="tab" data-toggle="tab">Request</a>
         </li>
     </ul>
    <div class="tab-content">
@@ -115,6 +123,7 @@
                         <h4><strong> joined Users:</strong></h4>
                         <div class="row scroll_list" id = "scroll_list">
                         @foreach ($joined_trips as $joined_trip)
+                        <div class="memberForm">
                             <div class="col-lg-6 list_user">
                                 <div class="thumbnail avatar_trip">
                                     <img src="{{asset($joined_trip->user->avatar)}}" class="profile_avatar">
@@ -125,8 +134,13 @@
                                             </h4>
                                         </a>
                                     </div>
+                                    <button class="btn-danger kickBtn" 
+                                    value="{{$joined_trip->user_id}}">
+                                        kick
+                                    </button>
                                 </div>
                             </div>
+                        </div>
                         @endforeach
                         <button class="btn btn-primary" id = "loadMore"> load more</button>
                         </div>
@@ -136,6 +150,42 @@
         </div> <!-- end detail div -->
         <div role="tabpanel" class="tab-pane" id="discussDiv">
             fuck huy
+        </div>
+        <div role="tabpanel" class="tab-pane" id="requestDiv">
+            @foreach ($joined_requests as $joined_request)
+            <div class="requestDetail">
+            <div class="row"  data-remove = "{{$joined_request->user_id}}">
+                <div class="col-lg-offset-2 col-lg-2    ">
+                <div class="thumbnail avatar_trip">
+                    <img src="{{asset($joined_request->user->avatar)}}" class="profile_avatar">
+                    <div class="caption">
+                        <a href="{{route('profile',$joined_request->user->id)}}">        
+                            <h4 class="text-center"> 
+                                <strong> {{$joined_request->user->name}} </strong> 
+                            </h4>
+                        </a>
+                    </div>
+                </div>
+                </div>
+                <div class="col-lg-4">
+                    <h3> <strong> message:</strong></h3>
+                    <textarea cols="42" rows="5">
+                        {{$joined_request->message}}
+                    </textarea>
+                    <br>
+                    <input class = "user_id" type="hidden" value="{{$joined_request->user_id}}">
+                    <button class="btn-primary allowJoinBtn" style="float: right;">
+                        Accept
+                    </button>
+                    <button class="btn-danger denyJoinBtn" style = "float: right;">
+                        Deny
+                    </button>
+
+                </div>
+            </div>
+            <hr class="style2">
+            </div>
+            @endforeach
         </div>
     </div> <!-- end tab content -->
 </div>

@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Trip;
+use App\Joined_trip;
 use App\User;
+use App\Followed_trip;
+use App\Joined_request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateProfile;
 use App\Http\Requests\UploadAvatar;
@@ -20,10 +24,14 @@ class ProfileController extends Controller
             return view('notfound');
         }
         else {   
-            $planning_creates = $user->created_trips;
+            $created_trips = $user->created_trips;
+            $followed_trips = $user->followed_trips;
+            $joined_trips = $user->joined_trips;
             return view('profile',[
                 'user' => $user,
-                'planning_creates' => $planning_creates,
+                'created_trips' => $created_trips,
+                'followed_trips' => $followed_trips,
+                'joined_trips' => $joined_trips,
             ]);
         }
     }

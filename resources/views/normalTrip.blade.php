@@ -10,14 +10,49 @@
                 {{$trip->description}}
             </h4> 
             <div class="text-center" style="display: inline;">
+                @can ('follow', $trip)
+                    <button class="btn btn-primary text-center"
+                    id = "followBtn" value="0">
+                        Follow
+                    </button>
+                @endcan
+                @can ('unfollow',$trip)
+                    <button class="btn btn-primary text-center"
+                    id = "followBtn" value="1">
+                        Unfollow
+                    </button>
+                @endcan
+
+                @can ('outTrip', $trip)
+                    <button class="btn btn-primary text-center" 
+                    id="joinBtn" value="2">
+                        Out trip
+                    </button>
+                @endcan
+
+                @can ('joinRequest', $trip)
+                    <button class="btn btn-primary text-center" 
+                    id="joinBtn" value="0">
+                        Join trip
+                    </button>
+                @endcan
+
+                @can ('cancelRequest', $trip)
+                    <button class="btn btn-primary text-center" 
+                    id="joinBtn" value="1">
+                        Cancel request
+                    </button>
+                @endcan
                 <button class="btn btn-primary">
                     Status: 
                     @if ($trip->status == 0)
                         planning
                     @elseif ($trip->status == 1)
                         running
-                    @else
+                    @elseif ($trip->status == 1)
                         done
+                    @else
+                        canceled
                     @endif
                 </button>
             </div>
