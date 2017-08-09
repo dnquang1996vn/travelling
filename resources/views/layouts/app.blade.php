@@ -28,7 +28,7 @@
    <!--  css tu viet -->
    <link href="{{ asset('css/handle.css') }}" rel="stylesheet">
    <link href="{{ asset('css/loadmore.css') }}" rel="stylesheet">
-
+   @yield('header');
 </head>
 <body>
     <div id="app" >
@@ -124,7 +124,7 @@
             </div>
         </nav>
             @yield('content')
-        <div class="row">
+        <div class="row col-md-12">
             <div class="footer" style="background: #dddddd">
                 <h3> Information of co-founder </h3>
                 <div class="row">
