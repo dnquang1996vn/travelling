@@ -76,6 +76,8 @@
         <form enctype="multipart/form-data" id="form_upload_trip_cover" method="post" action="">
             <img id="trip_cover" src="/image/cover/default_cover.png" height="300" width="1200">
             <input name="trip_cover" type="file" id="upload_trip_cover">
+            <input id="plans" type="hidden" name="plans">
+            <input id="new_trip" type="hidden" name="new_trip">
         </form>
     </div>
     <br>
@@ -91,6 +93,10 @@
         <div class="form-group col-md-4">
             <label>Time End:</label>
             <input type="text" id="time_end">
+        </div>
+        <div class="form-group col-md-8">
+            <label class="col-md-2">Description:</label>
+            <textarea id="description"></textarea>
         </div> 
     </div>
 
