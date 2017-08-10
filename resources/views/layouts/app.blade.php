@@ -73,7 +73,7 @@
                             </a>
                         </li>
                         <li class="navbar-icon">
-                        <a href="#">
+                        <a href="/create_trip">
                             <button class="btn btn-primary">
                                 <span class="glyphicon glyphicon-plus disabled" aria-hidden="true"></span>
                                 <span class="visible-xs">Create a trip</span>

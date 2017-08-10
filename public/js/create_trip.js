@@ -134,7 +134,7 @@ function initMap() {
                     $('#prev_marker').remove();
                 }
                 // if marker is last marker
-                if(index_of_marker == (markers.length - 1) && end_here == 0) {
+                if(index_of_marker == (markers.length - 1) && end_here == 0 && index_of_marker != 0) {
                     $('#next_marker').remove();
                     $('<a id="end_here"><div class="context">End Here</div></a>').appendTo('.contextmenu');
                 }
@@ -275,20 +275,36 @@ function initMap() {
                     jQuery('.datetimepicker'+count_plan).datetimepicker();
                     //set event for Finish Trip Button
                     $('#finish_trip').click(function() {
-                        new_trip.name = $('#trip_name').val();
-                        new_trip.time_start = $('#time_start').val();
-                        new_trip.time_end = $('#time_end').val();
+                        new_trip.name        = $('#trip_name').val();
+                        new_trip.time_start  = $('#time_start').val();
+                        new_trip.time_end    = $('#time_end').val();
+                        new_trip.description = $('#description').val();
                         // save to array  
                         updatePlans();
                         function updatePlans() {
                             for (var i = 0; i < plans.length; i++) {
-                                plans[i].from = $('#from'+i).val();
-                                plans[i].to = $('#to'+i).val();
+                                plans[i].from       = $('#from'+i).val();
+                                plans[i].to         = $('#to'+i).val();
                                 plans[i].time_start = $('#time_start'+i).val();
-                                plans[i].time_end = $('#time_end'+i).val();
-                                plans[i].vehicle = $('#vehicle'+i).val();
-                                plans[i].activity = $('#activity'+i).val();
-                            }                                  
+                                plans[i].time_end   = $('#time_end'+i).val();
+                                plans[i].vehicle    = $('#vehicle'+i).val();
+                                plans[i].activity   = $('#activity'+i).val();
+                            }
+                            // add marker lat lng to Plan
+                            for( var j = 0; j < markers.length ;j++) {
+                                var last = markers.length - 1;
+                                if(j == 0) {
+                                    plans[0].src_lat = parseFloat(markers[0].getPosition().lat());
+                                    plans[0].src_lng = parseFloat(markers[0].getPosition().lng());
+                                    plans[last].dest_lat = parseFloat(markers[0].getPosition().lat());
+                                    plans[last].dest_lng = parseFloat(markers[0].getPosition().lng());
+                                }else{
+                                    plans[j-1].dest_lat =  parseFloat(markers[j].getPosition().lat());
+                                    plans[j-1].dest_lng =  parseFloat(markers[j].getPosition().lng());
+                                    plans[j].src_lat = parseFloat(markers[j].getPosition().lat());
+                                    plans[j].src_lng = parseFloat(markers[j].getPosition().lng());
+                                }
+                            }                                 
                         }
                         console.log(plans);
                         //sending data with ajax
@@ -298,18 +314,23 @@ function initMap() {
                             'accepts': 'application/json',
                             }
                         });
+                        $('#plans').val(JSON.stringify(plans));
+                        $('#new_trip').val(JSON.stringify(new_trip));
+                        var data = new FormData($('#form_upload_trip_cover')[0]);
+                        //data.append("markers", JSON.stringify(markers));
+                        // data.append("new_trip",JSON.stringify(new_trip));
                         $.ajax({
                             url: '/create_trip',
-                            dataType:'text',
-                            type:'post',                          
-                            data: {
-                                new_trip,
-                                plans,
-                            },
+                            type: "post",
+                            datatType: "text",
+                            processData: false,
+                            contentType: false,
+                            data: data,
+                        
                             success: function(data){
                                 $('#form_errors').remove();
                                 alert('success');
-                                console.log(data);
+                                window.location.replace("/");
                             },
                             error: function(data) {
                                 alert('failed');
@@ -321,25 +342,7 @@ function initMap() {
                                 }
                                 $('#form_errors').remove();
                                 $('<div class="alert alert-danger" id="form_errors">'+html_errors+'</div>').insertBefore('#trip_cover');
-                                console.log(html_errors);                                 
-                            }
-                        });
-
-                        //
-                        $.ajax({
-                            url: '/create_trip',
-                            type: "post",
-                            datatType: "text",
-                            processData: false,
-                            contentType: false,
-                            data: new FormData($('#form_upload_trip_cover')[0]),
-                            success: function(data){
-                                alert('success image');
-                                console.log(data);
-                            },
-                            error: function(data) {
-                                alert('failed image ');
-                                console.log(data);
+                                console.log(html_errors); 
                             }
                         });
                     });  
