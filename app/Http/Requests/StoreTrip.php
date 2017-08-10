@@ -24,15 +24,16 @@ class StoreTrip extends FormRequest
     public function rules()
     {
        return [
-            // 'plans.*.from' => 'required',
-            // 'plans.*.to' => 'required',
-            // 'plans.*.time_start' => 'required|date|after:'.date('Y-m-d H:i:s'),
-            // 'plans.*.time_end' => 'required|date|after:plans.*.time_start',
-            // 'plans.*.vehicle' =>'required',
-            // 'plans.*.activity' =>'required',
-            // 'new_trip.name' => 'required',
-            // 'new_trip.time_start' => 'required|date|after:'.date('Y-m-d H:i:s'),
-            // 'new_trip.time_end' => 'required|date|after:new_trip.time_start',
+            'plans.*.from' => 'required',
+            'plans.*.to' => 'required',
+            'plans.*.time_start' => 'required|date|after:'.date('Y-m-d H:i:s'),
+            'plans.*.time_end' => 'required|date|after:plans.*.time_start',
+            'plans.*.vehicle' =>'required',
+            'plans.*.activity' =>'required',
+            'new_trip.name' => 'required',
+            'new_trip.time_start' => 'required|date|after:'.date('Y-m-d H:i:s'),
+            'new_trip.time_end' => 'required|date|after:new_trip.time_start',
+            'trip_cover' => 'required|image|mimes:jpeg,jpg,png,gif',
         ];
     }
 }

@@ -51,16 +51,17 @@
 }
 
 .cover_trip
-{	
-	width: 800px;
-	height: 400px !important;
+
+{
+	width: 1150px;
+	height: 300px !important;
 	vertical-align: middle;
     text-align:center;
 }
 .cover
 {
-	width: 1000px;
-	height: 400px;
+	width: 1150px;
+	height: auto;
 	box-shadow: 3px 3px 3px #888888;
 	vertical-align: middle;
     text-align:center;
