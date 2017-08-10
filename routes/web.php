@@ -35,13 +35,11 @@ Route::post('trip/finishTrip', 'TripController@finishTrip');
 Route::post('trip/cancelTrip', 'TripController@cancelTrip');
 
 
+Route::get('demo','UploadController@dropzone');
+Route::post('/load','UploadController@dropzoneStore');
+Route::post('/upload/delete', 'UploadController@delete');
 
 
-Route::get('/demo', function () {
-    return view('demo');
-});
-Route::post("/fuck",'ProfileController@upload');
-Route::get('load','ProfileController@load')->name('load');
 //Create Trip Route
 Route::get('create_trip','CreateTripController@create');
 Route::post('create_trip','CreateTripController@store');
