@@ -43,3 +43,5 @@ Route::post('/upload/delete', 'UploadController@delete');
 //Create Trip Route
 Route::get('create_trip','CreateTripController@create');
 Route::post('create_trip','CreateTripController@store');
+Route::get('edit_trip/{trip_id}','CreateTripController@editForm');
+Route::post('edit_trip/{trip_id}','CreateTripController@editTrip');
