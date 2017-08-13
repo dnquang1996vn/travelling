@@ -104,18 +104,18 @@
                     <div id="map"></div>
                     <hr>
                     <h4> Schedule </h4>
-                <div id="accordion" >
-                        @foreach( $plans as $i => $plan )
-                        <h3>Plan {{$i+1}} : {{ $plan->src_name }} --> {{ $plan->dest_name }}</h3>
-                        <div>
-                            <p>From: {{ $plan->src_name }}</p>
-                            <p>To: {{ $plan->dest_name }}</p>
-                            <p>Time start: {{ $plan->starting_time }}</p>
-                            <p>Time end: {{ $plan->ending_time }}</p>
-                            <p>Vehicle: {{ $plan->vehicle }}</p>
-                            <p>Activity:<br> {!! $plan->activity !!}</p>
-                        </div>     
-                        @endforeach
+                    <div id="accordion" >
+                            @foreach( $plans as $i => $plan )
+                            <h3>Plan {{$i+1}} : {{ $plan->src_name }} --> {{ $plan->dest_name }}</h3>
+                            <div>
+                                <p>From: {{ $plan->src_name }}</p>
+                                <p>To: {{ $plan->dest_name }}</p>
+                                <p>Time start: {{ $plan->starting_time }}</p>
+                                <p>Time end: {{ $plan->ending_time }}</p>
+                                <p>Vehicle: {{ $plan->vehicle }}</p>
+                                <p>Activity:<br> {!! $plan->activity !!}</p>
+                            </div>     
+                            @endforeach
                     </div>
                 </div>
                 <div class="col-lg-4" style="border: solid;">
