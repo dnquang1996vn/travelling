@@ -36,6 +36,7 @@ Route::post('trip/cancelTrip', 'TripController@cancelTrip');
 
 Route::post('comment/image/delete','UploadController@delete');
 Route::post('comment/add','CommentController@add');
+Route::post('comment/addSub','CommentController@addSub');
 
 Route::get('demo','UploadController@dropzone');
 Route::post('/load','UploadController@dropzoneStore');
