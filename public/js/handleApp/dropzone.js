@@ -3,6 +3,34 @@
     $(".addDropzone").click(function(){
         $(this).parentsUntil(".add_comment").find("form").toggle();
     });
+    $(".subCommentBtn").click(function(){
+        var data = {
+            parent_id: $(this).val(),
+            trip_id: $('#trip_id').val(),
+            user_id: $('#user_id').val(),
+            text:    $(this).parentsUntil(".add_comment").find("textarea").val(),
+                }
+        var that = this;
+        $.ajax({
+            type: 'POST',
+            url: '/comment/addSub',
+            data: data,
+            dataType: 'json',
+            success: function(data){
+                $(that).parentsUntil(".add_comment").find("textarea").val("");
+                var comment_id = data.comment.id;
+                var userName = data.user.name;
+                var avatar = data.user.avatar;
+                var user_id = data.user.id;
+                var comment_text = data.comment.text;
+                var comment = createComment(userName,avatar,comment_text,user_id);
+                $(that).parentsUntil(".commentContent").find(".subCommentList").append(comment);
+            },
+            error: function(data){
+                alert('enter text pls')
+            },
+        });
+    });    
     Dropzone.autoDiscover = false;
     var myDropzone = new Dropzone("#image_upload", { 
         maxFilesize : 4,
@@ -21,6 +49,7 @@
                     data: {file: file.serverFileName},
                     dataType: 'html',
                     success: function(data){
+                      
                     }
                 });
             });
@@ -37,6 +66,7 @@
                     trip_id: $('#trip_id').val(),
                     user_id: $('#user_id').val(),
                     text:    $(this).parentsUntil(".add_comment").find("textarea").val(),
+
                 }
                 var that = this;
                 $.ajax({
@@ -69,6 +99,9 @@
                             $("#commentList").prepend(comment);
                         }
                         setTimeout(print,2000);
+                    },
+                    error: function(data){
+                        alert('enter text pls')
                     },
                 });
             });
@@ -123,4 +156,35 @@
             +         '</div>'
             +    '</div>';
             return comment;
+    }
+
+    function createSubComment(userName,avatar,comment_text,user_id){
+    var comment ='<div class="subComment">'
+        +        '<div class = "row">'
+        +            '<div class="col-lg-1">'
+        +                '<img src="'+avatar+'" class="comment_avatar">'
+        +            '</div>'       
+        +            '<div class="col-lg-9">'
+        +                '<div class="subCommentContent">'
+        +                    '<a href="/profile/'+user_id+'">'
+        +                   ' <strong style="color: blue">'
+        +                        userName +'&nbsp'
+        +                    '</strong>'
+        +                    '</a>'
+        +                   comment_text
+        +                   ' <div class="imageContent">'                      
+        +                    '</div>'
+       +                     '<br>'
+        +                   ' <div class = "respond" style="display: inline;">'
+        +                        '&nbsp&nbsp&nbsp'
+        +                       ' <a href=""javascript:;""> Like </a>'
+        +                   ' </div>'
+        +               ' </div>'
+        +            '</div>'
+        +           ' <div class="col-lg-2">'
+        +            '</div>'
+        +            '<br><br>'
+        +       ' </div>'
+        +   ' </div>'
+        return comment;
     }
