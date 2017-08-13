@@ -9,6 +9,7 @@ var places = [];
 var count_plan = -1;
 var end_here = 0;
 var new_trip = {};
+
 //init Map
 function initMap() {
     //init
@@ -62,9 +63,7 @@ function initMap() {
             directionsDisplay.setMap(map);
             $('.contextmenu').remove();
             var lat = e.latLng.lat();
-            var lng = e.latLng.lng();
-            // $('#lat').val(lat);
-            // $('#lng').val(lng);        
+            var lng = e.latLng.lng();     
             placeMarkerAndAddMarker(e.latLng,map);
             geocodeLatLngMarker(geocoder, map, markers[markers.length - 1]);
             //when has more than 2 marker ---> show Display Route 
@@ -109,7 +108,6 @@ function initMap() {
                           place = results[1].formatted_address;
                           //update place at index_of_marker
                           places.splice(index_of_marker,1,place);
-                          console.log(places);
                         } else {
                           window.alert('No results found');
                         }
@@ -117,7 +115,7 @@ function initMap() {
                         window.alert('Geocoder failed due to: ' + status);
                       }
                     });
-                }                 
+                }               
             }
 
             //Show Context for new marker( last marker)
@@ -187,12 +185,9 @@ function initMap() {
                     markers[index_of_marker].setMap(null);
                     var marker_remove = markers.splice(index_of_marker,1);
                     places.splice(index_of_marker,1);
-                    console.log(places);
                     updatePlaces();
                     function updatePlaces() {
                         for (var i = 0; i < (places.length-1); i++) {
-                            console.log(places[i]);
-                            console.log(places[i+1]);
                             $('#from'+i).val(places[i]);
                             $('#to'+i).val(places[i+1]);
                         }
@@ -207,7 +202,7 @@ function initMap() {
                     }else {
                         showDisplayRouteToEnd(); 
                     }
-                });
+                }); //end remove click
 
                 //add marker after a marker
                 $('#next_marker').click(function() {
@@ -265,6 +260,7 @@ function initMap() {
                     $('#plan_form').append(plan_form);
                     $('<button name="finish_trip" id="finish_trip">Finish Trip</button>').appendTo('#plan_form');
                     showDisplayRouteToEnd();
+                    //update Plans Array
                     var plan = {};
                     plan.from = places[markers.length -1];
                     plan.to = places[0];
@@ -398,6 +394,7 @@ function initMap() {
                 $('#to'+count_plan).val(plan.to);
                 plans.push(plan);
                 console.log(plans);
+                //set date time picker for last plan
                 jQuery('.datetimepicker'+count_plan).datetimepicker();
             }
 

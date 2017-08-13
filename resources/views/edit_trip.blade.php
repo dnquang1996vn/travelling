@@ -73,10 +73,10 @@
     <script src="http://malsup.github.com/jquery.form.js"></script>
 @endsection
 @section('content')
-    <h3><b>Create a new Trip</b></h3>
+    <h3><b>Edit Trip: {{$trip->name}}</b></h3>
     <div class="col-md-8 col-md-offset-1">
         <form enctype="multipart/form-data" id="form_upload_trip_cover" method="post" action="">
-            <img id="trip_cover" src="/image/cover/default_cover.png" height="300" width="1200">
+            <img id="trip_cover" src="{{( $trip->cover == null)?'/image/cover/default_cover.png': '/'.$trip->cover}}" height="300" width="1200">
             <input name="trip_cover" type="file" id="upload_trip_cover">
             <input id="plans" type="hidden" name="plans">
             <input id="new_trip" type="hidden" name="new_trip">
@@ -88,19 +88,19 @@
             <div class="col-md-6">
                 <div class="form-group col-md-12">
                     <label>Name:</label>
-                    <input type="text" id="trip_name">
+                    <input type="text" id="trip_name" value="{{$trip->name}}">
                 </div>
                 <div class="form-group col-md-6">
                     <label>Time Start:</label>
-                    <input type="text" id="time_start">
+                    <input type="text" id="time_start" value="{{$trip->starting_time}}">
                 </div>
                 <div class="form-group col-md-6">
                     <label>Time End:</label>
-                    <input type="text" id="time_end">
+                    <input type="text" id="time_end" value="{{$trip->ending_time}}">
                 </div>
                 <div class="form-group col-md-12">
                     <label>Description:</label>
-                    <textarea id="description"></textarea>
+                    <textarea id="description" value="{{$trip->description}}"></textarea>
                 </div> 
                 <div class="form-group">
                     <span>Total Distance:</span>
@@ -112,13 +112,60 @@
             </div>
             <div class="col-md-6">
                 <div class="col-md-12" id="plan_form" style="overflow-x: hidden; overflow-y: scroll; max-height: 1000px;">
+                @foreach( $plans as $i => $plan )
+                    <fieldset id="plan{{$i}}">
+                        <legend id="number_of_plan{{$i}}" >Plan {{$i+1}}</legend>
+                            <div class="col-lg-12">
+                                <div class="form-group col-md-5">
+                                    <label for="from">From: </label>
+                                    <input type="text" id="from{{$i}}" value="{{ $plan->src_name }}">
+                                    <input type="hidden" name="src_lat{{$i}}" value="{{$plan->src_lat}}">
+                                    <input type="hidden" name="src_lng{{$i}}" value="{{$plan->src_lng}}">
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label for="to">To: </label>
+                                    <input type="text" id="to{{$i}}" value="{{ $plan->dest_name }}">
+                                    <input type="hidden" name="dest_lat{{$i}}" value="{{$plan->dest_lat}}">
+                                    <input type="hidden" name="dest_lng{{$i}}" value="{{$plan->dest_lng}}">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group col-md-5">
+                                    <label for="time_start">Time start: </label>
+                                    <input type="text" class="datetimepicker{{$i}}" id="time_start{{$i}}" value="{{ $plan->starting_time }}">
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label for="time_end">Time end: </label>
+                                    <input type="text" class="datetimepicker{{$i}}" id="time_end{{$i}}" value="{{ $plan->ending_time }}">'
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group col-md-5">
+                                    <label for="vehicle">Vehicle: </label>
+                                    <input type="text" id="vehicle{{$i}}" value="{{ $plan->vehicle }}">
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label for="to">Activity: </label>
+                                    <textarea id="activity{{$i}}" >{{ $plan->activity }}</textarea>
+                                </div>
+                            </div>
+                    </fieldset>     
+                @endforeach
+                <button name="finish_trip" id="finish_trip">Finish Trip</button>
                 </div>
             </div>
         </div>
     </div>
-    
+    <script type="text/javascript">
+        var sum_plans = "{{$plans->count()}}";
+        var locations = [
+            @foreach ($plans as $plan)
+                [ "{{ $plan->src_lat }}", "{{ $plan->src_lng }}" ], 
+            @endforeach
+        ];
+        var trip_id = "{{ $trip->id }}";
+    </script>
 <!--     Script -->
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTEHZLU2VKA-CTNLUVzi5KvaB9dk4u1u4&libraries=places&callback=initMap"
         async defer></script>
 <script src="{{asset('js/jquery.datetimepicker.full.min.js')}}"></script>
@@ -127,9 +174,12 @@
     $(document).ready(function() {
         jQuery('#time_start').datetimepicker();
         jQuery('#time_end').datetimepicker();
+        for(var i = 0; i < sum_plans ; i++) {
+            jQuery('.datetimepicker'+i).datetimepicker();
+        }
     });
 </script>
-<script type="text/javascript" src="{{asset('js/create_trip.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/edit_trip.js')}}"></script>
 <script type="text/javascript">
     // show image to preview before upload
     $(document).ready(function() {

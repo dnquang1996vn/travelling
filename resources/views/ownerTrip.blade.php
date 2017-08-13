@@ -11,9 +11,9 @@
             </h4> 
             @can ('update', $trip)
 
-                    <button class="btn btn-primary text-center">
+                    <a href="/edit_trip/{{$trip->id}}"><button class="btn btn-primary text-center">
                         Edit trip
-                    </button>
+                    </button></a>
                     <div class="dropdown" style="float: left;">
                         @if ($trip->status == 0)
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" value="0" id = "statusBtn">
