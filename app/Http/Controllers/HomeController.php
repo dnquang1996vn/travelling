@@ -26,8 +26,7 @@ class HomeController extends Controller
     {   
         $allTrips = Trip::orderBy('id','asc')->get();
         $newestTrips = Trip::orderBy('id','desc')->take(10)->get();
-        $hottestTrips = Trip::orderBy('id','asc')->get(); //tam thoi the
-
+        $hottestTrips = Trip::orderBy('id','asc')->take(10)->get();
         return view('home')->with('allTrips', $allTrips)
                             ->with('newestTrips', $newestTrips)
                             ->with('hottestTrips', $hottestTrips);

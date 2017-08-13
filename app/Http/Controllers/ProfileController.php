@@ -23,7 +23,7 @@ class ProfileController extends Controller
         if ($user == null) {
             return view('notfound');
         }
-        else {   
+        else {
             $created_trips = $user->created_trips;
             $followed_trips = $user->followed_trips;
             $joined_trips = $user->joined_trips;
@@ -51,8 +51,9 @@ class ProfileController extends Controller
         };  
     }
 
-    public function upload(UpdateProfile $request,$id)
+    public function upload(UploadAvatar $request,$id)
     {   
+        //dd($request->all());
         if (Auth::user()->id == $id){
             
             //$path = $request->avatarInput->store('image/avatar');
@@ -64,11 +65,5 @@ class ProfileController extends Controller
             $user->save();
             return $user;
         }
-    }
-
-    public function load()
-    {
-        $url = Storage::url('quang.jpg');
-        return view('load')->with('url',$url);
     }
 }
