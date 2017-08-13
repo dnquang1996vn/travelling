@@ -3,7 +3,6 @@
 @section('content')
 <div class="container" style = "background: #f2f2f2">
     <br><br>
-    <button id="testbtn">dshfiu</button>
     <div class="row">
         <div class="col-md-3"> <!-- avatar -->
             <div class="thumbnail avatar" id = "avatarFrame"> 

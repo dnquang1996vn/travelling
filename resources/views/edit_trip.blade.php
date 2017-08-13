@@ -100,7 +100,7 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label>Description:</label>
-                    <textarea id="description" value="{{$trip->description}}"></textarea>
+                    <textarea id="description">{!! $trip->description !!}</textarea>
                 </div> 
                 <div class="form-group">
                     <span>Total Distance:</span>

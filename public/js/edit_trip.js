@@ -201,15 +201,6 @@ function initMap() {
                           }
                         });
                     }
-                    //update DOM Places
-                    function updateDOMPlaces(){
-                        for (var i = 0; i < (places.length-1); i++) {
-                                $('#from'+i).val(places[i]);
-                                $('#to'+i).val(places[i+1]);
-                            }
-                        $('#from'+(places.length -1)).val(places[places.length - 1]);
-                        $('#to'+(places.length -1)).val(places[0]);
-                    }
                 });
 
                 //Set Menu Context Event
@@ -220,17 +211,20 @@ function initMap() {
                     if(index_of_marker == 0) {
                         $('#prev_marker').remove();
                     }
-                    // if marker is last marker
-                    if(index_of_marker == (markers.length - 1) && end_here == 0 && i != 0) {
-                        $('#next_marker').remove();
-                    }
                     //remove marker 
                     $('#remove_marker').click(function() {
+                        var index = markers.findIndex(function(marker) {
+                                return (e.latLng.lat() === marker.getPosition().lat()) && (e.latLng.lng() === marker.getPosition().lng());
+                        });
                         // remove a plan in array and update DOM
-                        if(index_of_marker == 0) {
-                            $('#plan'+index_of_marker).remove();
+                        if(index == 0) {
+                            console.log(index);
+                            $('#plan'+index).remove();
                             for (var i = 1; i < plans.length; i++) {
-                                $('#number_of_plan'+i).html("Plan "+i);
+                                console.log(i);
+                                $('#plan'+i).attr("id",'plan'+(i-1));
+                                $('#number_of_plan'+i).attr("id",'number_of_plan'+(i-1));
+                                $('#number_of_plan'+(i-1)).html("Plan "+i);
                                 $('#from'+i).attr("id",'from'+(i-1));
                                 $('#to'+i).attr("id",'to'+(i-1));
                                 $('#time_start'+i).attr("id",'time_start'+(i-1));
@@ -238,19 +232,21 @@ function initMap() {
                                 $('#vehicle'+i).attr("id",'vehicle'+(i-1));
                                 $('#activity'+i).attr("id",'activity'+(i-1));
                             }
-                            plans.splice(index_of_marker,1);
-                        }else if(index_of_marker == (markers.length - 1)) {
-                            $('#plan'+index_of_marker).remove();
-                            plans[index_of_marker - 1].to = plans[index_of_marker].to;
-                            plans.splice(index_of_marker,1);
+                            plans.splice(index,1);
+                        }else if(index == (markers.length - 1)) {
+                            $('#plan'+index).remove();
+                            plans[index - 1].to = plans[index].to;
+                            plans.splice(index,1);
                         }
                         else{
                             //marker is not first or last
-                            var prev = index_of_marker - 1;
-                            var next = index_of_marker + 1;
-                            $('#plan'+index_of_marker).remove();
+                            var prev = index - 1;
+                            var next = index + 1;
+                            $('#plan'+index).remove();
                             for (var i = next; i < plans.length; i++) {
-                                $('#number_of_plan'+i).html("Plan "+i);
+                                $('#plan'+i).attr("id",'plan'+(i-1));
+                                $('#number_of_plan'+i).attr("id",'number_of_plan'+(i-1));
+                                $('#number_of_plan'+(i-1)).html("Plan "+i);
                                 $('#from'+i).attr("id",'from'+(i-1));
                                 $('#to'+i).attr("id",'to'+(i-1));
                                 $('#time_start'+i).attr("id",'time_start'+(i-1));
@@ -258,25 +254,23 @@ function initMap() {
                                 $('#vehicle'+i).attr("id",'vehicle'+(i-1));
                                 $('#activity'+i).attr("id",'activity'+(i-1));
                             }
-                            plans[index_of_marker - 1].to = plans[index_of_marker].to;
-                            plans.splice(index_of_marker,1);
+                            plans[index - 1].to = plans[index].to;
+                            plans.splice(index,1);
                         }
                         sum_plans --;
 
                         $('.contextmenu').remove();
-                        markers[index_of_marker].setMap(null);
-                        var marker_remove = markers.splice(index_of_marker,1);
-                        places.splice(index_of_marker,1);
+                        markers[index].setMap(null);
+                        var marker_remove = markers.splice(index,1);
+                        places.splice(index,1);
                         updatePlaces();
                         function updatePlaces() {
                             for (var i = 0; i < (places.length-1); i++) {
                                 $('#from'+i).val(places[i]);
                                 $('#to'+i).val(places[i+1]);
                             }
-                            if(end_here == 1 ) {
-                                $('#from'+(places.length -1)).val(places[places.length - 1]);
-                                $('#to'+(places.length -1)).val(places[0]);
-                            }
+                            $('#from'+(places.length -1)).val(places[places.length - 1]);
+                            $('#to'+(places.length -1)).val(places[0]);
                         }
                         showDisplayRouteToEnd(); 
                     });//end remove marker
@@ -351,7 +345,7 @@ function initMap() {
                                 geocoder.geocode({'location': latlng}, function(results, status) {
                                   if (status === 'OK') {
                                     if (results[1]) {
-                                      map.setZoom(11);
+                                      //map.setZoom(11);
                                       place = results[1].formatted_address;
                                       //update place at index_of_marker
                                       addNewPlaceArray();
@@ -424,12 +418,19 @@ function initMap() {
             geocoder.geocode({'location': latlng}, function(results, status) {
               if (status === 'OK') {
                 if (results[1]) {
-                  map.setZoom(11);
+                  //map.setZoom(11);
                   place = results[1].formatted_address;
+                  console.log(place);
                   //update place at index_of_marker
                   places.splice(index_of_marker,1,place);
+                  console.log(places);
+                  updateDOMPlaces();
                 } else {
                   window.alert('No results found');
+                  place = 'No results found';
+                  //update place at index_of_marker
+                  places.splice(index_of_marker,1,place);
+                  updateDOMPlaces();
                 }
               } else {
                 window.alert('Geocoder failed due to: ' + status);
@@ -535,8 +536,18 @@ function initMap() {
             }   
     }
 
-} // End function initMap()
-
+} // End function initMap()                    
+//update DOM Places
+function updateDOMPlaces(){
+    for (var i = 0; i < places.length; i++) {
+            $('#from'+i).val(places[i]);
+            $('#to'+i).val(places[i+1]);
+            if(i == (places.length-1)) {
+                $('#from'+(places.length -1)).val(places[places.length - 1]);
+                $('#to'+(places.length -1)).val(places[0]);
+            }
+    }
+}
 // place Marker and Pan to it
 function placeMarkerAndAddMarker(latLng, map) {
     marker = new google.maps.Marker({
@@ -561,7 +572,7 @@ function geocodeLatLng(geocoder, map, infowindow) {
     geocoder.geocode({'location': latlng}, function(results, status) {
       if (status === 'OK') {
         if (results[1]) {
-          map.setZoom(11);
+          //map.setZoom(11);
           infowindow.setContent(results[1].formatted_address);
           infowindow.open(map, marker);
           $('#name_road').val(results[1].formatted_address);    //set name for input text
