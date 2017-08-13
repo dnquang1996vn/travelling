@@ -16,7 +16,7 @@ class CreateTripController extends Controller
     //
     function create() 
     {
-        return view('map');
+        return view('create_trip');
     }
     function store(Request $request)
     {      
@@ -44,13 +44,25 @@ class CreateTripController extends Controller
             ])->validate();
             //if has 1 plan
             if( $i > 0 ){
-                Validator::make($plans,[
-                    $i.'.from'       => 'same:'.($i-1).'.to',
-                    $i.'.src_lat'    => 'same:'.($i-1).'.dest_lat',
-                    $i.'.src_lng'    => 'same:'.($i-1).'.dest_lng',
-                    $i.'.time_start' => 'required|date|before:'.$i.'.time_end'.'|after:'.($i - 1).'.time_end',
-                    $i.'.time_end'   => 'required|date|after:'.$i.'.time_start',
-                ])->validate();
+                //if not last plans
+                if($i != (sizeof($plans)-1)) {
+                    Validator::make($plans,[
+                        $i.'.from'       => 'same:'.($i-1).'.to',
+                        $i.'.src_lat'    => 'same:'.($i-1).'.dest_lat',
+                        $i.'.src_lng'    => 'same:'.($i-1).'.dest_lng',
+                        $i.'.time_start' => 'required|date|before:'.$i.'.time_end'.'|after:'.($i - 1).'.time_end',
+                        $i.'.time_end'   => 'required|date|after:'.$i.'.time_start',
+                    ])->validate();                    
+                }else {
+                    Validator::make($plans,[
+                        $i.'.from'       => 'same:'.($i-1).'.to',
+                        $i.'.to'       => 'same:0.from',
+                        $i.'.src_lat'    => 'same:'.($i-1).'.dest_lat',
+                        $i.'.src_lng'    => 'same:'.($i-1).'.dest_lng',
+                        $i.'.time_start' => 'required|date|before:'.$i.'.time_end'.'|after:'.($i - 1).'.time_end',
+                        $i.'.time_end'   => 'required|date|after:'.$i.'.time_start',
+                    ])->validate(); 
+                }
             }
         }
         // If form has a file(image) or not ?
@@ -103,6 +115,9 @@ class CreateTripController extends Controller
 
     function editForm($id) {
         $trip = Trip::find($id);
+        if(Auth::user()->id != $trip->owner_id && $trip->status != 0){
+                  return redirect()->route('home');
+        }
         $plans = $trip->plans;
         return view('edit_trip')->with('trip',$trip)->with('plans',$plans);
     }
@@ -142,55 +157,71 @@ class CreateTripController extends Controller
             ])->validate();
             //if has 1 plan
             if( $i > 0 ){
-                Validator::make($plans,[
-                    $i.'.from'       => 'same:'.($i-1).'.to',
-                    $i.'.src_lat'    => 'same:'.($i-1).'.dest_lat',
-                    $i.'.src_lng'    => 'same:'.($i-1).'.dest_lng',
-                    $i.'.time_start' => 'required|date|before:'.$i.'.time_end'.'|after:'.($i - 1).'.time_end',
-                    $i.'.time_end'   => 'required|date|after:'.$i.'.time_start',
-                ])->validate();
+                //if not last plans
+                if($i != (sizeof($plans)-1)) {
+                    Validator::make($plans,[
+                        $i.'.from'       => 'same:'.($i-1).'.to',
+                        $i.'.src_lat'    => 'same:'.($i-1).'.dest_lat',
+                        $i.'.src_lng'    => 'same:'.($i-1).'.dest_lng',
+                        $i.'.time_start' => 'required|date|before:'.$i.'.time_end'.'|after:'.($i - 1).'.time_end',
+                        $i.'.time_end'   => 'required|date|after:'.$i.'.time_start',
+                    ])->validate();                    
+                }else {
+                    Validator::make($plans,[
+                        $i.'.from'       => 'same:'.($i-1).'.to',
+                        $i.'.to'       => 'same:0.from',
+                        $i.'.src_lat'    => 'same:'.($i-1).'.dest_lat',
+                        $i.'.src_lng'    => 'same:'.($i-1).'.dest_lng',
+                        $i.'.time_start' => 'required|date|before:'.$i.'.time_end'.'|after:'.($i - 1).'.time_end',
+                        $i.'.time_end'   => 'required|date|after:'.$i.'.time_start',
+                    ])->validate(); 
+                }
             }
         }//end foreach
 
-        $current_trip  = Trip::find($id);     
-        // If form has a file(image) or not ?
-        if($request->hasFile('trip_cover')) {
-            $file = $request->file('trip_cover');
-            $name = time().$file->getClientOriginalName();
-            $file->move(public_path().'/image/cover/',$name);
-            $imagePath = public_path().'/image/cover/'.$name;
-            $image = Image::make($imagePath)->resize(1150,300);
-            $image->save($imagePath);
-            //remove old image
-            Storage::delete($current_trip->cover);
-            //update url image 
-            $current_trip -> cover       = "image/cover/".$name;
-        }
-        $current_trip -> name            = json_decode($request->new_trip)->name;
-        $current_trip -> starting_time   = json_decode($request->new_trip)->time_start;
-        $current_trip -> ending_time     = json_decode($request->new_trip)->time_end;
-        $current_trip -> description     = json_decode($request->new_trip)->description;   
-        $current_trip -> save();
+        $current_trip  = Trip::find($id);
+        if(Auth::user()->id != $current_trip->owner_id){
+            return redirect()->route('home');
+        }else {     
+            // If form has a file(image) or not ?
+            if($request->hasFile('trip_cover')) {
+                $file = $request->file('trip_cover');
+                $name = time().$file->getClientOriginalName();
+                $file->move(public_path().'/image/cover/',$name);
+                $imagePath = public_path().'/image/cover/'.$name;
+                $image = Image::make($imagePath)->resize(1150,300);
+                $image->save($imagePath);
+                //remove old image
+                Storage::delete($current_trip->cover);
+                //update url image 
+                $current_trip -> cover       = "image/cover/".$name;
+            }
+            $current_trip -> name            = json_decode($request->new_trip)->name;
+            $current_trip -> starting_time   = json_decode($request->new_trip)->time_start;
+            $current_trip -> ending_time     = json_decode($request->new_trip)->time_end;
+            $current_trip -> description     = json_decode($request->new_trip)->description;   
+            $current_trip -> save();
 
-        //delete all old plan of trip
-        foreach($current_trip->plans as $plan) {
-            $plan -> delete();
-        }
-        //insert new Plan to Plan Table
-        foreach ($plans as $i => $plan) {
-            $newPlan                    = new Plan;
-            $newPlan -> trip_id         = $current_trip -> id;
-            $newPlan -> src_lat         = $plan['src_lat'];
-            $newPlan -> src_lng         = $plan['src_lng'];
-            $newPlan -> src_name        = $plan['from'];
-            $newPlan -> dest_lat        = $plan['dest_lat'];
-            $newPlan -> dest_lng        = $plan['dest_lng'];
-            $newPlan -> dest_name       = $plan['to'];
-            $newPlan -> starting_time   = $plan['time_start'];
-            $newPlan -> ending_time     = $plan['time_end'];
-            $newPlan -> vehicle         = $plan['vehicle'];
-            $newPlan -> activity        = $plan['activity'];
-            $newPlan -> save();
+            //delete all old plan of trip
+            foreach($current_trip->plans as $plan) {
+                $plan -> delete();
+            }
+            //insert new Plan to Plan Table
+            foreach ($plans as $i => $plan) {
+                $newPlan                    = new Plan;
+                $newPlan -> trip_id         = $current_trip -> id;
+                $newPlan -> src_lat         = $plan['src_lat'];
+                $newPlan -> src_lng         = $plan['src_lng'];
+                $newPlan -> src_name        = $plan['from'];
+                $newPlan -> dest_lat        = $plan['dest_lat'];
+                $newPlan -> dest_lng        = $plan['dest_lng'];
+                $newPlan -> dest_name       = $plan['to'];
+                $newPlan -> starting_time   = $plan['time_start'];
+                $newPlan -> ending_time     = $plan['time_end'];
+                $newPlan -> vehicle         = $plan['vehicle'];
+                $newPlan -> activity        = $plan['activity'];
+                $newPlan -> save();
+            }
         }
     }
 }

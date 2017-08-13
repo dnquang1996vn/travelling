@@ -15,6 +15,7 @@ class TripController extends Controller
     public function show($id)
     {
     	$trip = Trip::find($id);
+        $plans = $trip->plans;
     	$user = Auth::user();
     	if ($trip == null)
     	{
@@ -27,21 +28,24 @@ class TripController extends Controller
             $joined_requests = $trip->joined_requests;
             if ($user == null){
                 return view('trip',[
-                    'trip' => $trip,
+                    'trip'         => $trip,
                     'joined_trips' => $joined_trips,
+                    'plans'        => $plans,
                     ]);
             } else {
                if ($user->can('update',$trip)){
                 return view('ownerTrip',[
-                'trip' => $trip,
-                'joined_trips' => $joined_trips,
-                'joined_requests' => $joined_requests,
+                'trip'              => $trip,
+                'joined_trips'      => $joined_trips,
+                'joined_requests'   => $joined_requests,
+                'plans'             => $plans,
                 ]);
             }
                 else {
                     return view('normalTrip',[
                     'trip' => $trip,
                     'joined_trips' => $joined_trips,
+                    'plans'        => $plans,
                     ]);
                 } 
             }

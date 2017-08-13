@@ -6,7 +6,7 @@ var markers = [];
 var waypts = [];
 var plans = [];
 var places = [];
-var count_plan = -1;
+var count_plan = -1;    //count_plan plan0,plan1,plan2
 var end_here = 0;
 var new_trip = {};
 
@@ -267,14 +267,15 @@ function initMap() {
                     $('#from'+count_plan).val(plan.from);
                     $('#to'+count_plan).val(plan.to);
                     plans.push(plan);
-                    console.log(plans);
                     jQuery('.datetimepicker'+count_plan).datetimepicker();
+                    //add new nicEditor
+                    new nicEditor().panelInstance('activity'+count_plan);
                     //set event for Finish Trip Button
                     $('#finish_trip').click(function() {
                         new_trip.name        = $('#trip_name').val();
                         new_trip.time_start  = $('#time_start').val();
                         new_trip.time_end    = $('#time_end').val();
-                        new_trip.description = $('#description').val();
+                        new_trip.description = $('#description').parent().find('div.nicEdit-main').html();
                         // save to array  
                         updatePlans();
                         function updatePlans() {
@@ -284,7 +285,7 @@ function initMap() {
                                 plans[i].time_start = $('#time_start'+i).val();
                                 plans[i].time_end   = $('#time_end'+i).val();
                                 plans[i].vehicle    = $('#vehicle'+i).val();
-                                plans[i].activity   = $('#activity'+i).val();
+                                plans[i].activity  = $('#activity'+i).parent().find('div.nicEdit-main').html();
                             }
                             // add marker lat lng to Plan
                             for( var j = 0; j < markers.length ;j++) {
@@ -404,7 +405,7 @@ function initMap() {
                 $(document).ready(function() {
                     var plan_form = createFormPlan();
                     $('#plan_form').append(plan_form);
-
+                    new nicEditor().panelInstance('activity'+plans.length);
                 });
                 setTimeout(showPlan,1000);      
             }

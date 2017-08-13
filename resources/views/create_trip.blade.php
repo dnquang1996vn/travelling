@@ -1,5 +1,9 @@
 @extends('layouts.app')
 @section('header')
+    <script type="text/javascript" src="/js/nicEdit.js"></script>
+    <script type="text/javascript">
+        bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+    </script>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -76,6 +80,7 @@
     <h3><b>Create a new Trip</b></h3>
     <div class="col-md-8 col-md-offset-1">
         <form enctype="multipart/form-data" id="form_upload_trip_cover" method="post" action="">
+        {{ csrf_field() }}
             <img id="trip_cover" src="/image/cover/default_cover.png" height="300" width="1200">
             <input name="trip_cover" type="file" id="upload_trip_cover">
             <input id="plans" type="hidden" name="plans">

@@ -28,6 +28,7 @@
    <!--  css tu viet -->
    <link href="{{ asset('css/handle.css') }}" rel="stylesheet">
    <link href="{{ asset('css/loadmore.css') }}" rel="stylesheet">
+
    @yield('header');
 </head>
 <body>
