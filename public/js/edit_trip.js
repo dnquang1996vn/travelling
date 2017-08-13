@@ -106,7 +106,7 @@ function initMap() {
             success: function(data){
                 $('#form_errors').remove();
                 alert('success');
-                //window.location.replace("/");
+                window.location.replace("/");
             },
             error: function(data) {
                 alert('failed');
