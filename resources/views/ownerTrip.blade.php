@@ -1,19 +1,20 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container" style = "background: #f2f2f2">
     <section>
         <p class="text-center">
             <h1 class="text-center"> {{$trip->name}} </h1>
             <h3 class="text-center">From {{$trip->starting_time}} to {{$trip->ending_time}}</h3>
-            <h4 class="text-center" style="font-style: italic;">
-                {{$trip->description}}
-            </h4> 
+            <div align="center">
+                {!! $trip->description !!}
+            </div>
+            <br>
             @can ('update', $trip)
-
-                    <button class="btn btn-primary text-center">
-                        Edit trip
-                    </button>
+                    @if ($trip->status == 0)
+                        <a href="/edit_trip/{{$trip->id}}"><button class="btn btn-primary text-center" id="editTripBtn">
+                            Edit trip
+                        </button></a>
+                    @endif
                     <div class="dropdown" style="float: left;">
                         @if ($trip->status == 0)
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" value="0" id = "statusBtn">
@@ -77,35 +78,19 @@
                     <div id="map"></div>
                     <hr>
                     <h4> Schedule </h4>
-                    <!-- lam mot cai table -->
-                    <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th>Firstname</th>
-                            <th>Lastname</th>
-                            <th>Email</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john@example.com</td>
-                          </tr>
-                          <tr>
-                            <td>Mary</td>
-                            <td>Moe</td>
-                            <td>mary@example.com</td>
-                          </tr>
-                          <tr>
-                            <td>July</td>
-                            <td>Dooley</td>
-                            <td>july@example.com</td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-
+                    <div id="accordion" >
+                        @foreach( $plans as $i => $plan )
+                        <h3>Plan {{$i+1}} : {{ $plan->src_name }} --> {{ $plan->dest_name }}</h3>
+                        <div>
+                            <p>From: {{ $plan->src_name }}</p>
+                            <p>To: {{ $plan->dest_name }}</p>
+                            <p>Time start: {{ $plan->starting_time }}</p>
+                            <p>Time end: {{ $plan->ending_time }}</p>
+                            <p>Vehicle: {{ $plan->vehicle }}</p>
+                            <p>Activity:<br> {!! $plan->activity !!}</p>
+                        </div>     
+                        @endforeach
+                    </div>
                 </div>
                 <div class="col-lg-4" style="border: solid;">
                     <h3 class="text-center"> Members </h3>
@@ -217,20 +202,29 @@
     <script type="text/javascript" src = "{{asset('js/config.js')}}"></script>
     <script src = "{{asset('js/loadmore.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $( "#accordion" ).accordion({
+              collapsible: true
+            });    
+          });
+    </script>
 @endsection 
 
 @section('sc')
 <script type="text/javascript" src = "{{asset('js/handleApp/trip.js')}}"></script>
 <script type="text/javascript" src = "{{asset('js/handleApp/dropzone.js')}}"></script>
 @endsection
-<script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-        });
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTEHZLU2VKA-CTNLUVzi5KvaB9dk4u1u4&callback=initMap"
-async defer></script>
+<script type="text/javascript">
+    var sum_plans = "{{$plans->count()}}";
+    var locations = [
+        @foreach ($plans as $plan)
+            [ "{{ $plan->src_lat }}", "{{ $plan->src_lng }}" ], 
+        @endforeach
+    ];
+    var trip_id = "{{ $trip->id }}";
+</script>
+<script type="text/javascript" src = "{{asset('js/show_trip.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTEHZLU2VKA-CTNLUVzi5KvaB9dk4u1u4&callback=initMap"
+        async defer></script>
+

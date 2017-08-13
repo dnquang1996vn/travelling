@@ -1,5 +1,9 @@
 @extends('layouts.app')
 @section('header')
+    <script type="text/javascript" src="/js/nicEdit.js"></script>
+    <script type="text/javascript">
+        bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+    </script>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -8,8 +12,8 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
     #map {
-        height: 75%;
-        width: 50%;
+        height: 80%;
+        width: 100%;
     }
     /* Optional: Makes the sample page fill the window. */
     html, body {
@@ -61,7 +65,9 @@
     textarea {
       width: 300px;
       height: 150px;
+      display:block;
     }
+    label {display:block;}
     </style>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -74,6 +80,7 @@
     <h3><b>Create a new Trip</b></h3>
     <div class="col-md-8 col-md-offset-1">
         <form enctype="multipart/form-data" id="form_upload_trip_cover" method="post" action="">
+        {{ csrf_field() }}
             <img id="trip_cover" src="/image/cover/default_cover.png" height="300" width="1200">
             <input name="trip_cover" type="file" id="upload_trip_cover">
             <input id="plans" type="hidden" name="plans">
@@ -81,37 +88,39 @@
         </form>
     </div>
     <br>
-    <div class="col-md-12">
-        <div class="form-group">
-            <label>Name:</label>
-            <input type="text" id="trip_name">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group col-md-12">
+                    <label>Name:</label>
+                    <input type="text" id="trip_name">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Time Start:</label>
+                    <input type="text" id="time_start">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Time End:</label>
+                    <input type="text" id="time_end">
+                </div>
+                <div class="form-group col-md-12">
+                    <label>Description:</label>
+                    <textarea id="description"></textarea>
+                </div> 
+                <div class="form-group">
+                    <span>Total Distance:</span>
+                    <span id="total"></span>
+                </div>  
+                <input id="pac-input" class="controls" type="text"
+                        placeholder="Enter a location">
+                <div class="col-md-12" id="map" class="context-menu-one"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-12" id="plan_form" style="overflow-x: hidden; overflow-y: scroll; max-height: 1000px;">
+                </div>
+            </div>
         </div>
-        <div class="form-group col-md-4">
-            <label>Time Start:</label>
-            <input type="text" id="time_start">
-        </div>
-        <div class="form-group col-md-4">
-            <label>Time End:</label>
-            <input type="text" id="time_end">
-        </div>
-        <div class="form-group col-md-8">
-            <label class="col-md-2">Description:</label>
-            <textarea id="description"></textarea>
-        </div> 
     </div>
-
-    <div class="col-md-12">
-    <div class="form-group">
-        <span>Total Distance:</span>
-        <span id="total"></span>
-    </div>  
-    <input id="pac-input" class="controls" type="text"
-            placeholder="Enter a location">
-    <div class="col-md-6" id="map" class="context-menu-one"></div>
-    <div class="col-md-6" id="plan_form" style="overflow-x: hidden; overflow-y: scroll; max-height: 500px;">
-    </div>
-    </div>
-    <br>
     
 <!--     Script -->
 

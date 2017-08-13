@@ -45,5 +45,10 @@ Route::post('/load2','UploadController@load');
 Route::get('server-images/{comment_id}', 'UploadController@getServerImages');
 
 //Create Trip Route
-Route::get('create_trip','CreateTripController@create');
-Route::post('create_trip','CreateTripController@store');
+Route::group(['middleware' => ['user']], function () {
+    Route::get('create_trip','CreateTripController@create');
+    Route::post('create_trip','CreateTripController@store');
+    Route::get('edit_trip/{trip_id}','CreateTripController@editForm');
+    Route::post('edit_trip/{trip_id}','CreateTripController@editTrip');
+});
+

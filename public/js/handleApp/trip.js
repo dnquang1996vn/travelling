@@ -263,7 +263,7 @@ $(document).ready(function(){
                 $('#finishTripBtn').show();
                 $('#startTripBtn').hide();
                 $('#cancelTripBtn').hide();
-                
+                $('#editTripBtn').hide();
             },
             error: function(data) {
                 alert ("Something is wrong");
@@ -289,7 +289,7 @@ $(document).ready(function(){
                 $('#finishTripBtn').hide();
                 $('#startTripBtn').hide();
                 $('#cancelTripBtn').hide();
-                
+                $('#editTripBtn').hide();
             },
             error: function(data) {
                 alert ("Something is wrong");
