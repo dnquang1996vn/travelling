@@ -34,11 +34,15 @@ Route::post('trip/startTrip', 'TripController@startTrip');
 Route::post('trip/finishTrip', 'TripController@finishTrip');
 Route::post('trip/cancelTrip', 'TripController@cancelTrip');
 
+Route::post('comment/image/delete','UploadController@delete');
+Route::post('comment/add','CommentController@add');
 
 Route::get('demo','UploadController@dropzone');
 Route::post('/load','UploadController@dropzoneStore');
 Route::post('/upload/delete', 'UploadController@delete');
-
+Route::get('view','UploadController@view');
+Route::post('/load2','UploadController@load');
+Route::get('server-images/{comment_id}', 'UploadController@getServerImages');
 
 //Create Trip Route
 Route::group(['middleware' => ['user']], function () {

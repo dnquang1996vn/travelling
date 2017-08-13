@@ -134,7 +134,28 @@
             </div>
         </div> <!-- end detail div -->
         <div role="tabpanel" class="tab-pane" id="discussDiv">
-            fuck huy
+            <div class="add_comment">
+                <div class = "row" id = "addCommentDiv">
+                    <div class="col-lg-1">
+                        <img src="{{asset($user->avatar)}}" class="comment_avatar">
+                    </div>
+                    <div class="col-lg-8">
+                        <textarea rows="4" cols="80" placeholder="Comment here" class="commentContent"></textarea>
+                        <form action="/load" method = "post" file = "true" enctype="maltipart/form-data" class="dropzone image" id ="image_upload" style="display: none">
+                            {{ csrf_field() }}
+                        </form>
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-info addDropzone" id = "addDropzone"> add image</button>
+                        <button class="btn btn-primary commentSubmit" value=""> submit</button>
+                    </div>
+                </div>
+            </div>
+        <div id="commentList">
+        @foreach($comments as $comment)
+            @include('layouts.comment')
+        @endforeach
+        </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="requestDiv">
             @foreach ($joined_requests as $joined_request)
@@ -178,7 +199,9 @@
     
 @section('jq_lib') <!-- thu vien cua jequerry -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src = "{{asset('js/config.js')}}"></script>
     <script src = "{{asset('js/loadmore.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
     <script>
         $(document).ready(function() {
             $( "#accordion" ).accordion({
@@ -190,6 +213,7 @@
 
 @section('sc')
 <script type="text/javascript" src = "{{asset('js/handleApp/trip.js')}}"></script>
+<script type="text/javascript" src = "{{asset('js/handleApp/dropzone.js')}}"></script>
 @endsection
 <script type="text/javascript">
     var sum_plans = "{{$plans->count()}}";

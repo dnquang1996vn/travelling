@@ -29,6 +29,9 @@
    <link href="{{ asset('css/handle.css') }}" rel="stylesheet">
    <link href="{{ asset('css/loadmore.css') }}" rel="stylesheet">
 
+   <!-- drop zone -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css" rel="stylesheet">
+
    @yield('header');
 </head>
 <body>

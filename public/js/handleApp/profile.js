@@ -58,7 +58,7 @@
                 });
             });
         });
-
+       
 
         //modal update
         $("#updateBtn").click(function() {

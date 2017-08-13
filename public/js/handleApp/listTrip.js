@@ -5,5 +5,4 @@
 	        slidesToShow: 4,
 	        slidesToScroll: 4,
       	});
-      	console.log('rudddfddddddd');
     });

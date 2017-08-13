@@ -8,6 +8,7 @@ use App\Joined_trip;
 use App\User;
 use App\Followed_trip;
 use App\Joined_request;
+use App\Comment;
 use Illuminate\Support\Facades\Auth;
 
 class TripController extends Controller
@@ -23,26 +24,33 @@ class TripController extends Controller
     	}
     	else
     	{  
-
-            $joined_trips = Joined_trip::where('trip_id', $id)->get();
+            $comments = Comment::with(['images', 'user', 'children'])
+                            ->where('parent_id', null)
+                            ->where('trip_id', $trip->id)
+                            ->orderBy('id','desc')->take(10)->get();
+            $joined_trips = Joined_trip::with('user')->where('trip_id', $id)->get();
             $joined_requests = $trip->joined_requests;
             if ($user == null){
                 return view('trip',[
+                    'user'         => $user,
                     'trip'         => $trip,
                     'joined_trips' => $joined_trips,
                     'plans'        => $plans,
-                    ]);
+                ]);
             } else {
                if ($user->can('update',$trip)){
                 return view('ownerTrip',[
-                'trip'              => $trip,
-                'joined_trips'      => $joined_trips,
-                'joined_requests'   => $joined_requests,
-                'plans'             => $plans,
+                    'user'            => $user,
+                    'trip'            => $trip,
+                    'joined_trips'    => $joined_trips,
+                    'joined_requests' => $joined_requests,
+                    'comments'        => $comments,
+                    'plans'             => $plans,
                 ]);
             }
                 else {
                     return view('normalTrip',[
+                    'user' => $user,
                     'trip' => $trip,
                     'joined_trips' => $joined_trips,
                     'plans'        => $plans,

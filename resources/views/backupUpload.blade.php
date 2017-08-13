@@ -14,41 +14,55 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Upload Multiple Images using dropzone.js and Laravel</h1>
-            <form action="/load" method = "post" file = "true" enctype="maltipart/form-data" class="dropzone" id = "image-upload">
+            <button id = "add">add image</button>
+            <form action="/load" method = "post" file = "true" enctype="maltipart/form-data" class="dropzone" id = "image-upload" style="display: none">
              {{ csrf_field() }}
-             <input type="hidden" name="quang" value="1">
-            <div>
-                <h3>Upload Multiple Image By Click On Box</h3>
-            </div>
+            <input type="hidden" name="comment_id" value="1">
             </form>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-
-    Dropzone.options.imageUpload = {
+    $("#add").click(function(){
+        $(this).siblings("form").show();
+    });
+    Dropzone.autoDiscover = false;
+    $("#image-upload").dropzone ({
         maxFilesize         :       1,
         acceptedFiles: ".jpeg,.jpg,.png,.gif",
-        addRemoveLinks: true,
+        addRemoveLinks: true,  
+
+       
         init: function() {
+            this.on("addedfile", function(file) { 
+                console.log(file);
+                
+            });
+
+            this.on("success", function(file, serverFileName) {
+                file.serverFileName = serverFileName;
+                //console.log(file.id);
+                console.log(file.serverFileName);
+            });
+            
             this.on("removedfile", function(file) {
+                console.log(file.serverFileName);
                 $.ajax({
                     type: 'POST',
                     url: 'upload/delete',
-                    data: {id: file.name},
+                    data: {file: file.serverFileName},
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType: 'html',
                     success: function(data){
-                        var rep = JSON.parse(data);
-                        console.log(rep);
+                        console.log(data);
                     }
                 });
             });
         }
-    };
+    });
 </script>
 
 </body>
