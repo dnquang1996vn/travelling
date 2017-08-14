@@ -37,9 +37,14 @@
                     </div>
                     <div class="col-lg-9">
                         <textarea rows="4" cols="60" placeholder="Comment here" class="commentContent"></textarea>
+                        <form action="/load" method = "post" file = "true" enctype="maltipart/form-data" class="dropzone image" id ="image_upload" style="display: none">
+                            {{ csrf_field() }}
+                        </form>
                     </div>
+
                     <div class="col-lg-1">
-                        <button class="btn btn-primary subCommentBtn" value="{{$comment->id}}"> submit</button>
+                        <button class="btn btn-info addDropzone" id = "addDropzone"> add image</button>
+                        <button class="btn btn-primary commentSubmit" value="{{$comment->id}}"> submit</button>
                     </div>
                 </div>
             </div>

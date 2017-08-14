@@ -13,9 +13,9 @@
                 </a>
                 {{$child->text}}
                 <div class="imageContent">
-                    <!-- @foreach($child->images as $img)
+                    @foreach($child->images as $img)
                     <img src="{{asset($img->url)}}" class="comment_avatar">
-                    @endforeach -->
+                    @endforeach
                 </div>
                 <br>
                 <div class = "respond" style="display: inline;">
