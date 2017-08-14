@@ -20,6 +20,7 @@ class ProfileController extends Controller
     public function show ($id)
     {   
         $user = User::find($id);
+        //dd($user);
         if ($user == null) {
             return view('notfound');
         }
@@ -27,6 +28,7 @@ class ProfileController extends Controller
             $created_trips = $user->created_trips;
             $followed_trips = Followed_trip::with(['user','trip'])->where('user_id',$user->id)->get();
             $joined_trips = Joined_trip::with(['user','trip'])->where('user_id',$user->id)->get();
+
             return view('profile',[
                 'user' => $user,
                 'created_trips'  => $created_trips,

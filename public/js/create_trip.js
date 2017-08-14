@@ -49,8 +49,7 @@ function initMap() {
     var geocoder = new google.maps.Geocoder;
     var infowindow = new google.maps.InfoWindow;
 
-    //1
-    var i = 0 ;
+
     google.maps.event.addListener(map, "rightclick",function(e){
         //show Context Menu For Map
         showContextMenu(e.latLng,0);
@@ -72,16 +71,6 @@ function initMap() {
             //dragend for New marker (Last Marker)
             markers[markers.length - 1].addListener('dragend',function(event) {
                 dragendMarker(event);
-                function updateDOMPlaces(){
-                    for (var i = 0; i < (places.length-1); i++) {
-                            $('#from'+i).val(places[i]);
-                            $('#to'+i).val(places[i+1]);
-                        }
-                    if(end_here == 1 ) {
-                            $('#from'+(places.length -1)).val(places[places.length - 1]);
-                            $('#to'+(places.length -1)).val(places[0]);
-                    }
-                }
                 setTimeout(updateDOMPlaces,1000);
             });
             //
@@ -139,18 +128,12 @@ function initMap() {
 
                 //remove marker 
                 $('#remove_marker').click(function() {
+                    $('.contextmenu').remove();
                     // remove a plan in array and update DOM
                     if(index_of_marker == 0) {
                         $('#plan'+index_of_marker).remove();
-                        for (var i = 1; i < plans.length; i++) {
-                            $('#number_of_plan'+i).html("Plan "+i);
-                            $('#from'+i).attr("id",'from'+(i-1));
-                            $('#to'+i).attr("id",'to'+(i-1));
-                            $('#time_start'+i).attr("id",'time_start'+(i-1));
-                            $('#time_end'+i).attr("id",'time_end'+(i-1));
-                            $('#vehicle'+i).attr("id",'vehicle'+(i-1));
-                            $('#activity'+i).attr("id",'activity'+(i-1));
-                        }
+                        //decrement all plan_id from plan_id = 1
+                        updateDOMPlans(1);
                         plans.splice(index_of_marker,1);
                     }else if(index_of_marker == (markers.length - 1) && end_here == 0) {
                         $('#plan'+(index_of_marker-1) ).remove();
@@ -161,41 +144,21 @@ function initMap() {
                         plans.splice(index_of_marker,1);
                     }
                     else{
-                        //
-                        var prev = index_of_marker - 1;
-                        var next = index_of_marker + 1;
                         $('#plan'+index_of_marker).remove();
-                        for (var i = next; i < plans.length; i++) {
-                            $('#number_of_plan'+i).html("Plan "+i);
-                            $('#from'+i).attr("id",'from'+(i-1));
-                            $('#to'+i).attr("id",'to'+(i-1));
-                            $('#time_start'+i).attr("id",'time_start'+(i-1));
-                            $('#time_end'+i).attr("id",'time_end'+(i-1));
-                            $('#vehicle'+i).attr("id",'vehicle'+(i-1));
-                            $('#activity'+i).attr("id",'activity'+(i-1));
-                        }
+                        //decrement all plan_id from plan_id = next
+                        updateDOMPlans(index_of_marker + 1);
                         plans[index_of_marker - 1].to = plans[index_of_marker].to;
                         plans.splice(index_of_marker,1);
                     }
 
                     console.log('count_plan'+count_plan);
                     count_plan --;
-
-                    $('.contextmenu').remove();
+                    
                     markers[index_of_marker].setMap(null);
                     var marker_remove = markers.splice(index_of_marker,1);
                     places.splice(index_of_marker,1);
-                    updatePlaces();
-                    function updatePlaces() {
-                        for (var i = 0; i < (places.length-1); i++) {
-                            $('#from'+i).val(places[i]);
-                            $('#to'+i).val(places[i+1]);
-                        }
-                        if(end_here == 1 ) {
-                            $('#from'+(places.length -1)).val(places[places.length - 1]);
-                            $('#to'+(places.length -1)).val(places[0]);
-                        }
-                    }
+                    //update place in Plan
+                    updateDOMPlaces();
                     //if not click end here
                     if(end_here == 0) {
                         showDisplayRoute(); 
@@ -204,69 +167,19 @@ function initMap() {
                     }
                 }); //end remove click
 
-                //add marker after a marker
-                $('#next_marker').click(function() {
-                    //create a marker after choosed marker
-                    var lat = (markers[index_of_marker].getPosition().lat() + markers[index_of_marker+1].getPosition().lat())/2;
-                    var lng = (markers[index_of_marker].getPosition().lng() + markers[index_of_marker+1].getPosition().lng())/2;
-                    //set marker on map
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(lat,lng),
-                        map: map,
-                        draggable:true
-                    });
-                    //insert after choosing marker
-                    markers.splice(index_of_marker+1,0,marker);
-                    showDisplayRoute(); 
-                    //dragend for New marker (Last Marker)
-                    marker.addListener('dragend',function(e) {
-                        dragendMarker(e);
-                    });
-                    marker.addListener('rightclick',function(e) {
-                        rightclickMarker(e);
-                    });
-                });
-
-                //add marker after a marker
-                $('#prev_marker').click(function() {
-                    //create a marker after choosed marker
-                    var lat = (markers[index_of_marker].getPosition().lat() + markers[index_of_marker-1].getPosition().lat())/2;
-                    var lng = (markers[index_of_marker].getPosition().lng() + markers[index_of_marker-1].getPosition().lng())/2;
-                    //set marker on map
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(lat,lng),
-                        map: map,
-                        draggable:true
-                    });
-                    //insert after choosing marker
-                    markers.splice(index_of_marker,0,marker);
-                    showDisplayRoute(); 
-                    //dragend for New marker (Last Marker)
-                    marker.addListener('dragend',function(e) {
-                        dragendMarker(e);
-                    });
-                    marker.addListener('rightclick',function(e) {
-                        rightclickMarker(e);
-                    });
-                });
-
                 //Click end here
                 $('#end_here').click(function() {
                     $('.contextmenu').remove();
                     end_here = 1;
                     count_plan++;
                     console.log(count_plan);
-                    var plan_form = createFormPlan();
+                    //create form with index = count_plan
+                    var plan_form = createFormPlan(count_plan);
                     $('#plan_form').append(plan_form);
                     $('<button name="finish_trip" id="finish_trip">Finish Trip</button>').appendTo('#plan_form');
                     showDisplayRouteToEnd();
-                    //update Plans Array
-                    var plan = {};
-                    plan.from = places[markers.length -1];
-                    plan.to = places[0];
-                    $('#from'+count_plan).val(plan.from);
-                    $('#to'+count_plan).val(plan.to);
-                    plans.push(plan);
+                    //insert plan to Plans Array and update #from first plan and #to last plan
+                    addLastPlan();
                     jQuery('.datetimepicker'+count_plan).datetimepicker();
                     //add new nicEditor
                     new nicEditor().panelInstance('activity'+count_plan);
@@ -276,34 +189,14 @@ function initMap() {
                         new_trip.time_start  = $('#time_start').val();
                         new_trip.time_end    = $('#time_end').val();
                         new_trip.description = $('#description').parent().find('div.nicEdit-main').html();
-                        // save to array  
-                        updatePlans();
-                        function updatePlans() {
-                            for (var i = 0; i < plans.length; i++) {
-                                plans[i].from       = $('#from'+i).val();
-                                plans[i].to         = $('#to'+i).val();
-                                plans[i].time_start = $('#time_start'+i).val();
-                                plans[i].time_end   = $('#time_end'+i).val();
-                                plans[i].vehicle    = $('#vehicle'+i).val();
-                                plans[i].activity  = $('#activity'+i).parent().find('div.nicEdit-main').html();
-                            }
-                            // add marker lat lng to Plan
-                            for( var j = 0; j < markers.length ;j++) {
-                                var last = markers.length - 1;
-                                if(j == 0) {
-                                    plans[0].src_lat = parseFloat(markers[0].getPosition().lat());
-                                    plans[0].src_lng = parseFloat(markers[0].getPosition().lng());
-                                    plans[last].dest_lat = parseFloat(markers[0].getPosition().lat());
-                                    plans[last].dest_lng = parseFloat(markers[0].getPosition().lng());
-                                }else{
-                                    plans[j-1].dest_lat =  parseFloat(markers[j].getPosition().lat());
-                                    plans[j-1].dest_lng =  parseFloat(markers[j].getPosition().lng());
-                                    plans[j].src_lat = parseFloat(markers[j].getPosition().lat());
-                                    plans[j].src_lng = parseFloat(markers[j].getPosition().lng());
-                                }
-                            }                                 
-                        }
+                        // save all input to Plan Object Array
+                        savePlansPreSending();
                         console.log(plans);
+
+                        //
+                        $('#plans').val(JSON.stringify(plans));
+                        $('#new_trip').val(JSON.stringify(new_trip));
+                        var data = new FormData($('#form_upload_trip_cover')[0]);
                         //sending data with ajax
                         $.ajaxSetup({
                             headers: {
@@ -311,11 +204,7 @@ function initMap() {
                             'accepts': 'application/json',
                             }
                         });
-                        $('#plans').val(JSON.stringify(plans));
-                        $('#new_trip').val(JSON.stringify(new_trip));
-                        var data = new FormData($('#form_upload_trip_cover')[0]);
-                        //data.append("markers", JSON.stringify(markers));
-                        // data.append("new_trip",JSON.stringify(new_trip));
+
                         $.ajax({
                             url: '/create_trip',
                             type: "post",
@@ -352,40 +241,6 @@ function initMap() {
             //create a plan
             var plan = {};
             var flag = 0;
-            function createFormPlan() {
-                    var plan_form = '<fieldset id="plan'+count_plan+'">' 
-                                +'<legend id="number_of_plan'+count_plan+'" >Plan '+(count_plan + 1)+'</legend>'
-                                +'<div>'
-                                    +'<div class="col-md-8">'
-                                        +'<div class="form-group col-md-3">'
-                                        +'<label for="from">From: </label>'
-                                        +'<input type="text" id="from'+count_plan+'">'
-                                        +'</div>'
-                                        +'<div class="form-group col-md-3 col-md-offset-4">'
-                                        +'<label for="to">To: </label>'
-                                        +'<input type="text" id="to'+count_plan+'">'
-                                        +'</div>'
-                                        +'<div class="form-group col-md-3">'
-                                        +'<label for="time_start">Time start: </label>'
-                                        +'<input type="text" class="datetimepicker'+count_plan+'" id="time_start'+count_plan+'" >'
-                                        +'</div>'
-                                        +'<div class="form-group col-md-3 col-md-offset-4">'
-                                        +'<label for="time_end">Time end: </label>'
-                                        +'<input type="text" class="datetimepicker'+count_plan+'" id="time_end'+count_plan+'">'
-                                        +'</div>'
-                                        +'<div class="form-group col-md-3">'
-                                        +'<label for="vehicle">Vehicle: </label>'
-                                        +'<input type="text" id="vehicle'+count_plan+'">'
-                                        +'</div>'
-                                        +'<div class="form-group col-md-3 col-md-offset-4">'
-                                        +'<label for="to">Activity: </label>'
-                                        +'<textarea id="activity'+count_plan+'"></textarea>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                                +'</fieldset>';
-                    return plan_form;                      
-            };
             
             function showPlan() {
                 var plan = {};
@@ -403,7 +258,7 @@ function initMap() {
             if( markers.length > 1) {
                 count_plan++;
                 $(document).ready(function() {
-                    var plan_form = createFormPlan();
+                    var plan_form = createFormPlan(count_plan);
                     $('#plan_form').append(plan_form);
                     new nicEditor().panelInstance('activity'+plans.length);
                 });
@@ -436,6 +291,9 @@ function initMap() {
         }); // End click Add Marker function
         
     });
+
+    //1
+    //var i = 0 ;
     //2
     function showContextMenu(caurrentLatLng, number) {
         var projection;
@@ -535,6 +393,102 @@ function initMap() {
     }
     
 } // End function initMap()
+
+function createFormPlan(count_plan) {
+        var plan_form = '<fieldset id="plan'+count_plan+'">' 
+                    +'<legend id="number_of_plan'+count_plan+'" >Plan '+(count_plan + 1)+'</legend>'
+                    +'<div>'
+                        +'<div class="col-md-8">'
+                            +'<div class="form-group col-md-3">'
+                            +'<label for="from">From: </label>'
+                            +'<input type="text" id="from'+count_plan+'">'
+                            +'</div>'
+                            +'<div class="form-group col-md-3 col-md-offset-4">'
+                            +'<label for="to">To: </label>'
+                            +'<input type="text" id="to'+count_plan+'">'
+                            +'</div>'
+                            +'<div class="form-group col-md-3">'
+                            +'<label for="time_start">Time start: </label>'
+                            +'<input type="text" class="datetimepicker'+count_plan+'" id="time_start'+count_plan+'" >'
+                            +'</div>'
+                            +'<div class="form-group col-md-3 col-md-offset-4">'
+                            +'<label for="time_end">Time end: </label>'
+                            +'<input type="text" class="datetimepicker'+count_plan+'" id="time_end'+count_plan+'">'
+                            +'</div>'
+                            +'<div class="form-group col-md-3">'
+                            +'<label for="vehicle">Vehicle: </label>'
+                            +'<input type="text" id="vehicle'+count_plan+'">'
+                            +'</div>'
+                            +'<div class="form-group col-md-3 col-md-offset-4">'
+                            +'<label for="to">Activity: </label>'
+                            +'<textarea id="activity'+count_plan+'"></textarea>'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>'
+                    +'</fieldset>';
+        return plan_form;                      
+};
+
+function savePlansPreSending() {
+    for (var i = 0; i < plans.length; i++) {
+        plans[i].from       = $('#from'+i).val();
+        plans[i].to         = $('#to'+i).val();
+        plans[i].time_start = $('#time_start'+i).val();
+        plans[i].time_end   = $('#time_end'+i).val();
+        plans[i].vehicle    = $('#vehicle'+i).val();
+        plans[i].activity  = $('#activity'+i).parent().find('div.nicEdit-main').html();
+    }
+    // add marker lat lng to Plan
+    for( var j = 0; j < markers.length ;j++) {
+        var last = markers.length - 1;
+        if(j == 0) {
+            plans[0].src_lat = parseFloat(markers[0].getPosition().lat());
+            plans[0].src_lng = parseFloat(markers[0].getPosition().lng());
+            plans[last].dest_lat = parseFloat(markers[0].getPosition().lat());
+            plans[last].dest_lng = parseFloat(markers[0].getPosition().lng());
+        }else{
+            plans[j-1].dest_lat =  parseFloat(markers[j].getPosition().lat());
+            plans[j-1].dest_lng =  parseFloat(markers[j].getPosition().lng());
+            plans[j].src_lat = parseFloat(markers[j].getPosition().lat());
+            plans[j].src_lng = parseFloat(markers[j].getPosition().lng());
+        }
+    }                                 
+}
+
+function addLastPlan() {
+    //update Plans Array
+    var plan = {};
+    plan.from = places[markers.length -1];
+    plan.to = places[0];
+    $('#from'+count_plan).val(plan.from);
+    $('#to'+count_plan).val(plan.to);
+    plans.push(plan);
+}
+
+function updateDOMPlans(position) {
+    for (var i = position; i < plans.length; i++) {
+        $('#plan'+i).attr("id",'plan'+(i-1));
+        $('#number_of_plan'+i).attr("id",'number_of_plan'+(i-1));
+        $('#number_of_plan'+(i-1)).html("Plan "+i);
+        $('#from'+i).attr("id",'from'+(i-1));
+        $('#to'+i).attr("id",'to'+(i-1));
+        $('#time_start'+i).attr("id",'time_start'+(i-1));
+        $('#time_end'+i).attr("id",'time_end'+(i-1));
+        $('#vehicle'+i).attr("id",'vehicle'+(i-1));
+        $('#activity'+i).attr("id",'activity'+(i-1));
+    }
+}
+
+function updateDOMPlaces(){
+    for (var i = 0; i < (places.length-1); i++) {
+            $('#from'+i).val(places[i]);
+            $('#to'+i).val(places[i+1]);
+        }
+    if(end_here == 1 ) {
+            $('#from'+(places.length -1)).val(places[places.length - 1]);
+            $('#to'+(places.length -1)).val(places[0]);
+    }
+}
 
 // place Marker and Pan to it
 function placeMarkerAndAddMarker(latLng, map) {
