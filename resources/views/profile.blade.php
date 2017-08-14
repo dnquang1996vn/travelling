@@ -226,14 +226,17 @@
             @foreach($followed_trips as $new)
                 <div class="thumbnail">
                     <img src="{{asset($new->trip->cover)}}" alt="">
+
                     <div class="caption">
                         <h4><a href="{{route('trip',$new->trip->id)}}"><center>{{$new->trip->name}}</center></a>
+
                         <h5 class="text-center">{{$new->trip->starting_time}} to {{$new->trip->ending_time}}</h5>
                         </h4>
                         <div class="row">
                             <div class="col-md-6 col-lg-6">
                                 <h5 class="text-center"> owner: </h5>
                                 <h5 class="text-center">
+
                                     <a href="{{route('profile',$new->trip->owner->id)}}">{{$new->trip->owner->name}}</a>
                                 </h5>
                             </div>
