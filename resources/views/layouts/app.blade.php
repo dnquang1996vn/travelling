@@ -51,7 +51,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <strong style="font-size: 40px; color: blue">PhicherPro</strong>
+                        <strong style="font-size: 40px; color: blue">Travelling</strong>
                     </a>
                 </div>
 
