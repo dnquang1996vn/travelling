@@ -31,7 +31,7 @@ class CreateTripController extends Controller
             'new_trip.time_start'=> 'required|date|after:'.date('Y-m-d H:i:s'),
             'new_trip.time_end'  => 'required|date|after:new_trip.time_start',
             'trip_cover'         =>'required|image|mimes:jpeg,jpg,png,gif',
-            'plans'               => 'required|array|min:2',
+            'plans'              => 'required|array|min:2',
         ])->validate();
         foreach ($plans as $i => $plan) {
             Validator::make($plans,[
@@ -56,7 +56,7 @@ class CreateTripController extends Controller
                 }else {
                     Validator::make($plans,[
                         $i.'.from'       => 'same:'.($i-1).'.to',
-                        $i.'.to'       => 'same:0.from',
+                        $i.'.to'         => 'same:0.from',
                         $i.'.src_lat'    => 'same:'.($i-1).'.dest_lat',
                         $i.'.src_lng'    => 'same:'.($i-1).'.dest_lng',
                         $i.'.time_start' => 'required|date|before:'.$i.'.time_end'.'|after:'.($i - 1).'.time_end',
@@ -128,7 +128,7 @@ class CreateTripController extends Controller
         if($request->trip_cover != null){
         //if change trip cover validate image
             $trip_cover = $request->trip_cover;
-            $trip = array('new_trip' => $new_trip,'trip_cover' => $trip_cover, 'plans' => $plans);
+            $trip = array('new_trip'  => $new_trip,'trip_cover' => $trip_cover, 'plans' => $plans);
             Validator::make($trip,[
                 'new_trip.name'       => 'required',
                 'new_trip.time_start' => 'required|date|after:'.date('Y-m-d H:i:s'),
@@ -137,7 +137,7 @@ class CreateTripController extends Controller
                 'plans'               => 'required|array|min:2',
             ])->validate();            
         }else{
-            $trip = array('new_trip' => $new_trip, 'plans' => $plans);
+            $trip = array('new_trip'  => $new_trip, 'plans' => $plans);
             Validator::make($trip,[
                 'new_trip.name'       => 'required',
                 'new_trip.time_start' => 'required|date|after:'.date('Y-m-d H:i:s'),
