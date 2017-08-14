@@ -25,13 +25,13 @@ class ProfileController extends Controller
         }
         else {
             $created_trips = $user->created_trips;
-            $followed_trips = $user->followed_trips;
-            $joined_trips = $user->joined_trips;
+            $followed_trips = Followed_trip::with(['user','trip'])->where('user_id',$user->id)->get();
+            $joined_trips = Joined_trip::with(['user','trip'])->where('user_id',$user->id)->get();
             return view('profile',[
                 'user' => $user,
-                'created_trips' => $created_trips,
+                'created_trips'  => $created_trips,
                 'followed_trips' => $followed_trips,
-                'joined_trips' => $joined_trips,
+                'joined_trips'   => $joined_trips,
             ]);
         }
     }
