@@ -4,7 +4,7 @@
             <img src="{{asset($comment->user->avatar)}}" class="comment_avatar">
         </div>
     
-        <div class="col-lg-9">
+        <div class="col-lg-9 commentPart">
             <div class="commentContent">
                 <a href="/profile/{{$comment->user->id}}">
                 <strong style="color: blue">
@@ -24,7 +24,6 @@
                     &nbsp&nbsp&nbsp
                     <a href=""javascript:;"" class="replyCommentBtn"> Reply</a>
                 </div>
-                <
                 <div class="subCommentList">
                     @foreach($comment->children as $child)
                         @include('layouts.subComment') 
@@ -36,11 +35,16 @@
                     <div class="col-lg-1">
                         <img src="{{asset($user->avatar)}}" class="comment_avatar">
                     </div>
-                    <div class="col-lg-8">
-                        <textarea rows="4" cols="80" placeholder="Comment here" class="commentContent"></textarea>
+                    <div class="col-lg-9">
+                        <textarea rows="4" cols="60" placeholder="Comment here" class="commentContent"></textarea>
+                        <form action="/load" method = "post" file = "true" enctype="maltipart/form-data" class="dropzone image" id ="image_upload" style="display: none">
+                            {{ csrf_field() }}
+                        </form>
                     </div>
-                    <div class="col-lg-2">
-                        <button class="btn btn-primary subCommentBtn" value="{{$comment->id}}"> submit</button>
+
+                    <div class="col-lg-1">
+                        <button class="btn btn-info addDropzone" id = "addDropzone"> add image</button>
+                        <button class="btn btn-primary commentSubmit" value="{{$comment->id}}"> submit</button>
                     </div>
                 </div>
             </div>

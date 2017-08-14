@@ -45,15 +45,16 @@ class TripController extends Controller
                     'joined_trips'    => $joined_trips,
                     'joined_requests' => $joined_requests,
                     'comments'        => $comments,
-                    'plans'             => $plans,
+                    'plans'           => $plans,
                 ]);
             }
                 else {
                     return view('normalTrip',[
-                    'user' => $user,
-                    'trip' => $trip,
+                    'user'         => $user,
+                    'trip'         => $trip,
                     'joined_trips' => $joined_trips,
                     'plans'        => $plans,
+                    'comments'     => $comments,
                     ]);
                 } 
             }

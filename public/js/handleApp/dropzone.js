@@ -23,8 +23,12 @@
                 var avatar = data.user.avatar;
                 var user_id = data.user.id;
                 var comment_text = data.comment.text;
-                var comment = createComment(userName,avatar,comment_text,user_id);
-                $(that).parentsUntil(".commentContent").find(".subCommentList").append(comment);
+                var comment = createSubComment(userName,avatar,comment_text,user_id);
+                console.log(that);
+                console.log(comment);
+                console.log($(that).parentsUntil(".commentContent"));
+                console.log($(that).parentsUntil(".commentContent").find(".subCommentList"));
+                $(that).parentsUntil(".commentPart").find(".subCommentList").append(comment);
             },
             error: function(data){
                 alert('enter text pls')
@@ -32,7 +36,8 @@
         });
     });    
     Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#image_upload", { 
+$('.image').each(function(){
+    $(this).dropzone ({ 
         maxFilesize : 4,
         acceptedFiles: ".jpeg,.jpg,.png,.gif",
         addRemoveLinks: true,  
@@ -41,7 +46,10 @@
         maxFiles: 5,
         init: function() {
             var zone = this;
-            console.log(zone);
+            //console.log(zone);
+            var form = zone.element;
+            //console.log(form);
+            var button = $(form).parentsUntil(".add_comment").find(".commentSubmit");
             this.on("removedfile", function(file) {
                 $.ajax({
                     type: 'POST',
@@ -53,7 +61,7 @@
                     }
                 });
             });
-            $(".commentSubmit").click(function(e){
+            $(button).click(function(e){
                 e.preventDefault();
                 var imageList = [];
                 zone.on("success", function(file,serverFileName) {
@@ -82,6 +90,7 @@
                         var avatar = data.user.avatar;
                         var user_id = data.user.id;
                         var comment_text = data.comment.text;
+                        var parent_id = data.comment.parent_id;
                         console.log(data);
                         console.log(userName);
                         console.log(comment_text);
@@ -94,9 +103,14 @@
                             imageList.push(respond.url);
                         });
                         function print(){
-                            
                             var comment = createComment(userName,avatar,comment_text,imageList,user_id);
-                            $("#commentList").prepend(comment);
+                            if(parent_id == null){
+                                $("#commentList").prepend(comment);
+                            }
+                            else
+                            {
+                            $(that).parentsUntil(".commentPart").find(".subCommentList").append(comment); 
+                            }
                         }
                         setTimeout(print,2000);
                     },
@@ -107,7 +121,7 @@
             });
         }
     });
-
+});
    
     function createComment(userName,avatar,comment_text,imageList,user_id) {
         function getImageList(){
@@ -118,51 +132,10 @@
             }
             return images;
         }
-         var comment = '<div class="comment">'
-            +        '<div class = "row">'
-            +            '<div class="col-lg-1">'
-            +                '<img src="/'+avatar+'" class="comment_avatar">'
-            +            '</div>'
-                    
-            +            '<div class="col-lg-9">'
-            +                '<div class="commentContent">'
-            +                  '<a href="/profile/'+user_id+'">'
-            +                    '<strong style="color: blue">'
-            +                        userName+'&nbsp'
-            +                    '</strong>'+'</a>'
-            +                    comment_text
-            +                '</div>'
-            +                '<div class="imageContent">'
-            +                 getImageList(imageList)                                          
-            +                '</div>'
-            +                '<br>'
-            +                '<div class = "respond" style="display: inline;">'
-            +                    '&nbsp&nbsp&nbsp'
-            +                    '<a href=""javascript:;""> Like </a>'
-            +                    '&nbsp&nbsp&nbsp&nbsp&nbsp'
-            +                    '<a href=""javascript:;""> Reply</a>'
-            +                '</div>'
-            +                '<textarea rows="4" cols="100" class="commentContent" style="display: none">'
-            +                    '{{$comment->text}}'
-            +                '</textarea>'
-            +                '<form action="/load" method = "post" file = "true" enctype="maltipart/form-data" class="dropzone" id = "image-upload" style="display: none">'
-            +                    '{{ csrf_field() }}'
-            +                '</form>'
-            +            '</div>'
-            +            '<div class="col-lg-2">'
-            +                'dfj'
-            +            '</div>'
-            +            '<br><br>'
-            +         '</div>'
-            +    '</div>';
-            return comment;
-    }
-
-    function createSubComment(userName,avatar,comment_text,user_id){
-    var comment ='<div class="subComment">'
+        var comment ='<div class="subComment">'
         +        '<div class = "row">'
         +            '<div class="col-lg-1">'
-        +                '<img src="'+avatar+'" class="comment_avatar">'
+        +                '<img src="/'+avatar+'" class="comment_avatar">'
         +            '</div>'       
         +            '<div class="col-lg-9">'
         +                '<div class="subCommentContent">'
@@ -172,7 +145,39 @@
         +                    '</strong>'
         +                    '</a>'
         +                   comment_text
-        +                   ' <div class="imageContent">'                      
+        +                   ' <div class="imageContent">' 
+        +                       getImageList(imageList)                           
+        +                    '</div>'
+       +                     '<br>'
+        +                   ' <div class = "respond" style="display: inline;">'
+        +                        '&nbsp&nbsp&nbsp'
+        +                       ' <a href=""javascript:;""> Like </a>'
+        +                   ' </div>'
+        +               ' </div>'
+        +            '</div>'
+        +           ' <div class="col-lg-2">'
+        +            '</div>'
+        +            '<br><br>'
+        +       ' </div>'
+        +   ' </div>'
+        return comment;
+    }
+
+    function createSubComment(userName,avatar,comment_text,user_id){
+    var comment ='<div class="subComment">'
+        +        '<div class = "row">'
+        +            '<div class="col-lg-1">'
+        +                '<img src="/'+avatar+'" class="comment_avatar">'
+        +            '</div>'       
+        +            '<div class="col-lg-9">'
+        +                '<div class="subCommentContent">'
+        +                    '<a href="/profile/'+user_id+'">'
+        +                   ' <strong style="color: blue">'
+        +                        userName +'&nbsp'
+        +                    '</strong>'
+        +                    '</a>'
+        +                   comment_text
+        +                   ' <div class="imageContent">'                            
         +                    '</div>'
        +                     '<br>'
         +                   ' <div class = "respond" style="display: inline;">'

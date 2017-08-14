@@ -15,6 +15,7 @@ class CommentController extends Controller
     public function add(CommentRequest $request)
     {	
     	$comment = new Comment;
+        $comment->parent_id = $request->parent_id;
     	$comment->trip_id = $request->trip_id;
     	$comment->user_id = $request->user_id;
     	$comment->text    = $request->text;
