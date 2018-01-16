@@ -9,6 +9,7 @@ use App\Logic\Image\ImageRepository;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\CommentRequest;
+use LRedis;
 
 class CommentController extends Controller
 {
@@ -40,5 +41,20 @@ class CommentController extends Controller
                    'user'    => $user,
                 ];
         return $result;
+    }
+
+    public function addRealTime(Request $request)
+    {   
+        $result = [    
+                    'userName'      => $request->userName,
+                    'avatar'        => $request->avatar,
+                    'comment_text'  => $request->comment_text,
+                    'imageList'     => $request->imageList,
+                    'user_id'       => $request->user_id,
+                    'parent_id'     => $request->parent_id,
+                ];
+        //send message to channel comment
+        $redis = LRedis::connection();
+        $redis->publish("comment",json_encode($result));
     }
 }

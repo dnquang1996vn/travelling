@@ -152,6 +152,28 @@
                 </div>
             </div>
         <div id="commentList">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                var socket = io.connect('http://127.0.0.1:8890');
+                console.log('connected..');
+                var comment;
+                socket.on('comment', function(data) {
+                    data = JSON.parse(data);
+                    var comment = createComment(data.userName,data.avatar,data.comment_text,data.imageList,data.user_id);
+                    if(data.parent_id == null){
+                        $("#commentList").prepend(comment);
+                    }
+                    else
+                    {
+                        $(this).parentsUntil(".commentPart").find(".subCommentList").append(comment); 
+                    }
+                    console.log(data);                     
+                });
+            });
+        </script>
         @foreach($comments as $comment)
             @include('layouts.comment')
         @endforeach

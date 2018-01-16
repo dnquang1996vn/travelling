@@ -91,9 +91,6 @@ $('.image').each(function(){
                         var user_id = data.user.id;
                         var comment_text = data.comment.text;
                         var parent_id = data.comment.parent_id;
-                        console.log(data);
-                        console.log(userName);
-                        console.log(comment_text);
                         zone.on("sending", function(file, xhr, formData) { 
                             formData.append("comment_id", comment_id);  
                         });
@@ -102,20 +99,29 @@ $('.image').each(function(){
                         zone.on("success", function(file,respond) {
                             imageList.push(respond.url);
                         });
-                        function print(){
-                            var comment = createComment(userName,avatar,comment_text,imageList,user_id);
-                            if(parent_id == null){
-                                $("#commentList").prepend(comment);
-                            }
-                            else
-                            {
-                            $(that).parentsUntil(".commentPart").find(".subCommentList").append(comment); 
-                            }
+                        function sendComment(){
+                            alert(that);
+                            console.log(that);
+                            $.ajax({
+                                type: 'POST',
+                                url: '/comment/add_real_time',
+                                data: {
+                                    userName     : userName,
+                                    avatar       : avatar,
+                                    comment_text : comment_text,
+                                    imageList    : imageList,
+                                    user_id      : user_id,
+                                    parent_id    : parent_id,
+                                },
+                                success: function(data) {
+                                    alert('success');
+                                }
+                            });
                         }
-                        setTimeout(print,2000);
+                        setTimeout(sendComment,2000);
                     },
                     error: function(data){
-                        alert('enter text pls')
+                        alert('enter text pls');
                     },
                 });
             });

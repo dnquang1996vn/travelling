@@ -119,7 +119,6 @@
             </div>
         </div> <!-- end detail div -->
         <div role="tabpanel" class="tab-pane" id="discussDiv">
-            fuck huy
         </div>
     </div> <!-- end tab content -->
 </div>

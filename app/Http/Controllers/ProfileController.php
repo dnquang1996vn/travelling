@@ -53,16 +53,15 @@ class ProfileController extends Controller
         };  
     }
 
-    public function upload(UploadAvatar $request,$id)
+    public function upload(Request $request,$id)
     {   
-        //dd($request->all());
         if (Auth::user()->id == $id){
             
             //$path = $request->avatarInput->store('image/avatar');
             $path = Storage::putFile(
                 'avatars', $request->avatarInput);
             $user = User::find($id);
-            Storage::delete($user->avatar);           
+            //Storage::delete($user->avatar);           
             $user->avatar = $path;
             $user->save();
             return $user;

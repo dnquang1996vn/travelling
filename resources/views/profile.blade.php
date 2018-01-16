@@ -7,7 +7,7 @@
         <div class="col-md-3"> <!-- avatar -->
             <div class="thumbnail avatar" id = "avatarFrame"> 
                 
-                <img src="{{asset($user->avatar)}}" class="profile_avatar" id = "avatar">
+                <img height="200" width="200" style="height: no;" src="{{asset($user->avatar)}}" class="profile_avatar" id = "avatar">
                 @if ((Auth::user()->id) == $user->id)
                 <a href="#">
                     <span class="glyphicon glyphicon-edit edit_avatar" id = "editAvatarBtn">
